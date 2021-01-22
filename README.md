@@ -1,7 +1,7 @@
-# neovim-lua-plugin-boilderplate
+# neovim-lua-plugin-boilerplate
 
 I just forget the structure of a `neovim` plugin every single time. So the
-boilderplate make things easy.
+boilerplate make things easy.
 
 ## How to use
 
