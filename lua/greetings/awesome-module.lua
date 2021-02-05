@@ -1,4 +1,4 @@
-function greet()
+local function greet()
     print('testing')
 end
 
