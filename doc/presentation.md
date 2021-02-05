@@ -23,6 +23,7 @@ git clone <repo>
 ```
 
 * Open Neovim for editing
+
 ```
 # NOTE: make sure to add current directory to runtime path
 # otherwise, Neovim does not know how to find your plugin
@@ -38,8 +39,8 @@ mkdir -p lua/greetings
 * Create init file and sub modules for the module
 
 ```bash
-touch init.lua
-touch awesome-module.lua
+touch lua/greetings/init.lua
+touch lua/greetings/awesome-module.lua
 ```
 
 ## Create greetings plugin
@@ -60,7 +61,7 @@ return greet
 local greet = require('greetings.awesome-module')
 
 return {
-	greet = greet
+    greet = greet
 }
 ```
 
