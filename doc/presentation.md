@@ -2,10 +2,10 @@
 
 ## Before we start
 
-Neovim Lua boilerplate: https://github.com/s1n7ax/neovim-lua-plugin-boilerplate
-Neovim Lua video tutorials: https://youtube.com/playlist?list=PL0EgBggsoPCk1WCos2txThsxhg0fT5nqD
-My Neovim configuration: https://github.com/s1n7ax/dotnvim
-Terminal manager i'm using: https://github.com/s1n7ax/nvim-terminal
+* Neovim Lua boilerplate: https://github.com/s1n7ax/neovim-lua-plugin-boilerplate
+* Neovim Lua video tutorials: https://youtube.com/playlist?list=PL0EgBggsoPCk1WCos2txThsxhg0fT5nqD
+* My Neovim configuration: https://github.com/s1n7ax/dotnvim
+* Terminal manager: https://github.com/s1n7ax/nvim-terminal
 
 ## Prerequisites
 
@@ -22,10 +22,19 @@ Terminal manager i'm using: https://github.com/s1n7ax/nvim-terminal
 git clone <repo>
 ```
 
+* Open Neovim for editing
+```
+# NOTE: make sure to add current directory to runtime path
+# otherwise, Neovim does not know how to find your plugin
+nvim --cmd "set rtp+=."
+```
+
 * Create Lua module in Lua source directory
+
 ```bash
 mkdir -p lua/greetings
 ```
+
 * Create init file and sub modules for the module
 
 ```bash
@@ -44,7 +53,8 @@ end
 
 return greet
 ```
-* Expose public APIs of plugin
+
+* Expose public APIs of the plugin
 
 ```lua
 local greet = require('greetings.awesome-module')
@@ -54,7 +64,8 @@ return {
 }
 ```
 
-* Testing the plugin
+* Testing plugin APIs
+
 ```vim
 # you should run this in the vim command line
 :lua require('greetings').greet()
@@ -68,7 +79,14 @@ Lua will not reload module if it already exists. The changes you made will be
 applied the next time you open the editor. But you can force Lua to reload the
 module for development.
 
-* Create dev/init.lua file and add following content to the file
+* Create `dev/init.lua` file
+
+```bash
+mkdir -p dev
+touch dev/init.lua
+```
+
+* Add following to `dev/init.lua` to force reloading
 
 ```
 -- force lua to import the modules again
@@ -85,6 +103,7 @@ vim.api.nvim_set_keymap('n', ',r', '<cmd>luafile dev/init.lua<cr>', {})
 ```
 
 * While we are in the file, lets add shortcut to run the greeting plugin
+
 ```lua
 -- keybind to test the plugin
 Greetings = require('greetings')
