@@ -1,17 +1,36 @@
--- This file contains configurations to use in the development process
+--[[
+-- plugin name will be used to reload the loaded modules
+--]]
+local package_name = 'greetings'
 
--- force lua to import the modules again
-package.loaded['dev'] = nil
-package.loaded['greetings'] = nil
-package.loaded['greetings.awesome-module'] = nil
+-- add the escape character to special characters
+local escape_pattern = function (text)
+    return text:gsub("([^%w])", "%%%1")
+end
 
--- [ , + r ] keymap to reload the lua file
--- NOTE: someone need to source this file to apply these configurations. So, the
--- very first time you open the project, you have to source this file using
--- ":luafile dev/init.lua". From that point onward, you can hit the keybind to
--- reload
-vim.api.nvim_set_keymap('n', ',r', '<cmd>luafile dev/init.lua<cr>', {})
+-- unload loaded modules by the matching text
+local unload_packages = function ()
+	local esc_package_name = escape_pattern(package_name)
 
--- keybind to test the plugin
-Greetings = require('greetings')
-vim.api.nvim_set_keymap('n', ',w', '<cmd>lua Greetings.greet()<cr>', {})
+	for module_name, _ in pairs(package.loaded) do
+		if string.find(module_name, esc_package_name) then
+			package.loaded[module_name] = nil
+		end
+	end
+end
+
+-- executes the run method in the package
+local run_action = function ()
+	require(package_name).greet()
+end
+
+-- unload and run the function from the package
+function Reload_and_run()
+	unload_packages()
+	run_action()
+end
+
+local set_keymap = vim.api.nvim_set_keymap
+
+set_keymap('n', ',r', '<cmd>luafile dev/init.lua<cr>', {})
+set_keymap('n', ',w', '<cmd>lua Reload_and_run()<cr>', {})
