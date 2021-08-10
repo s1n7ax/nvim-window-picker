@@ -7,8 +7,8 @@ boilerplate to make it easier to get started writing `neovim` plugin.
 
 ## How to use
 
-* clone the project `git clone https://github.com/s1n7ax/neovim-lua-plugin-boilderplate`
-* go to the project folder `cd neovim-lua-plugin-boilderplate`
+* clone the project `git clone https://github.com/s1n7ax/neovim-lua-plugin-boilerplate`
+* go to the project folder `cd neovim-lua-plugin-boilerplate`
 * start editing `nvim --cmd "set rtp+=."`
 * reference the dev configurations `:luafile dev/init.lua`
 * run the greetings.greet() function using `,w` keybind
