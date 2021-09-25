@@ -84,10 +84,6 @@ require 'window-picker'.setup({
         -- if the file name contains one of following names, the window will be
         -- ignored
         file_name_contains = {},
-
-        -- if the window id matches any of following ids, the window will be
-        -- ignored
-        window_ids = {},
     },
 
     -- if you have include_current_win == true, then current_win_hl_color will

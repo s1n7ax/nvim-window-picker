@@ -10,12 +10,6 @@ local v = vim
 local api = v.api
 
 function M.filter_windows(window_ids, filters)
-    -- window id filter
-    window_ids = util.tbl_filter(
-                     window_ids, function(winid)
-            return not (v.tbl_contains(filters.window_ids, winid))
-        end)
-
     -- window option filter
     if v.tbl_count(filters.wo) > 0 then
         window_ids = util.tbl_filter(
@@ -102,12 +96,10 @@ function M.pick_window(custom_config)
             'nvim-window-selector: you should first call setup() when loading the plugin')
     end
 
-    -- just preventing changes in global config
     local conf = config
 
     if custom_config then
         conf = v.tbl_deep_extend('force', conf, custom_config)
-
     end
 
     -- setting highlight groups
@@ -120,14 +112,21 @@ function M.pick_window(custom_config)
         'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=' ..
             config.other_win_hl_color)
 
-    -- whether to include the current window to the list
-    if not config.include_current_win then
-        local winnr = api.nvim_get_current_win()
-        table.insert(conf.filter_rules.window_ids, winnr)
-    end
 
     local window_ids = api.nvim_list_wins()
     local selectable = conf.filter_func(window_ids, conf.filter_rules)
+
+    -- whether to include the current window to the list
+    if not config.include_current_win then
+        selectable = util.tbl_filter(selectable, function (winid)
+            local curr_win = api.nvim_get_current_win()
+            if winid == curr_win then
+                return false
+            end
+
+            return true
+        end)
+    end
 
     -- If there are no selectable windows, return
     if #selectable == 0 then return -1 end
