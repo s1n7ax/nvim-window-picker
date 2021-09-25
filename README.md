@@ -53,7 +53,7 @@ require 'window-picker'.setup({
     -- included in the selection
     -- EX:-
     -- function(window_ids, filters)
-    --    -- filder the window_ids
+    --    -- filter the window_ids
     --    -- return only the ones you want to include
     --    return {1000, 1001}
     -- end
