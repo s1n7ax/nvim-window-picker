@@ -1,11 +1,11 @@
 # nvim-window-picker
 
-| WARNING: This plugin is not meant to be used independently |
+| NOTE: This plugin is not meant to be used independently |
 | --- |
 
-This is a helper plugin for all your window picking needs.
-
-I copied the picker from [nvim-tree](https://github.com/kyazdani42/nvim-tree.lua) so shout out to
+This is a helper plugin for all your window picking needs. This simply returns
+the window id, the user picked. Part of the code is from
+[nvim-tree](https://github.com/kyazdani42/nvim-tree.lua) so shout out to
 them for coming up with this idea.
 
 ## Install
@@ -13,11 +13,11 @@ them for coming up with this idea.
 #### packer
 
 ```lua
-use { 
+use {
     's1n7ax/nvim-window-picker',
     config = function()
         require'window-picker'.setup()
-    end
+    end,
 }
 ```
 
