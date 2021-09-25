@@ -1,43 +1,4 @@
-# nvim-window-picker
-
-| WARNING: This plugin is not meant to be used independently |
-| --- |
-
-This is a helper plugin for all your window picking needs.
-
-I copied the picker from [nvim-tree](https://github.com/kyazdani42/nvim-tree.lua) so shout out to
-them for coming up with this idea.
-
-## Install
-
-#### packer
-
-```lua
-use { 
-    's1n7ax/nvim-window-picker',
-    config = function()
-        require'window-picker'.setup()
-    end
-}
-```
-
-**Make sure to `:PackerCompile` after intalling**
-
-## How to use
-
-```lua
-local picked_window_id = require('window-picker').pick_window()
-```
-
-**You can put the picked window id to good use**
-
-## Configuration
-
-If you want to have custom properties just for one time, you can pass any of
-following directly to `pick_window()` function itself.
-
-```lua
-require 'window-picker'.setup({
+local config = {
     -- when there is only one window available to pick from, use that window
     -- without prompting the user to select
     autoselect_one = true,
@@ -68,10 +29,10 @@ require 'window-picker'.setup({
         -- filter using buffer options
         bo = {
             -- if the file type is one of following, the window will be ignored
-            filetype = {},
+            filetype = { 'NvimTree' },
 
             -- if the file type is one of following, the window will be ignored
-            buftype = {},
+            buftype = { 'terminal' },
         },
 
         -- filter using window options
@@ -97,17 +58,6 @@ require 'window-picker'.setup({
     -- all the windows except the curren window will be highlighted using this
     -- color
     other_win_hl_color = '#44cc41',
-})
-```
+}
 
-```lua
-require(package_name).pick_window({
-    include_current_win = true,
-    selection_chars = '123345',
-    filter_rules = {
-        bo = {
-            filetype = {'markdown'}
-        }
-    },
-})
-```
+return config
