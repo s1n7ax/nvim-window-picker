@@ -108,14 +108,17 @@ function M.pick_window(custom_config)
     if custom_config then
         conf = v.tbl_deep_extend('force', conf, custom_config)
 
-        -- setting highlight groups
-        v.cmd(
-            'highlight NvimWindoSwitch gui=bold guifg=#ededed guibg=' ..
-                config.current_win_hl_color)
-        v.cmd(
-            'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=' ..
-                config.other_win_hl_color)
     end
+
+    -- setting highlight groups
+    -- NOTE: somethig clears out the highlights so this needs to be in pick
+    -- window function
+    v.cmd(
+        'highlight NvimWindoSwitch gui=bold guifg=#ededed guibg=' ..
+            config.current_win_hl_color)
+    v.cmd(
+        'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=' ..
+            config.other_win_hl_color)
 
     -- whether to include the current window to the list
     if not config.include_current_win then
@@ -185,14 +188,6 @@ function M.setup(custom_config)
     if custom_config then
         config = v.tbl_deep_extend('force', config, custom_config)
     end
-
-    -- setting highlight groups
-    v.cmd(
-        'highlight NvimWindoSwitch gui=bold guifg=#ededed guibg=' ..
-            config.current_win_hl_color)
-    v.cmd(
-        'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=' ..
-            config.other_win_hl_color)
 
     if not config.filter_func then config.filter_func = M.filter_windows end
 
