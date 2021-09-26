@@ -1,4 +1,4 @@
-# nvim-window-picker
+# nvim-window-picker (WIP)
 
 https://user-images.githubusercontent.com/18459807/134788195-4225bf74-218c-4744-8631-2692132cc602.mp4
 
