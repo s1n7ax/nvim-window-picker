@@ -68,7 +68,7 @@ require 'window-picker'.setup({
             -- if the file type is one of following, the window will be ignored
             filetype = { 'NvimTree' },
 
-            -- if the file type is one of following, the window will be ignored
+            -- if the buffer type is one of following, the window will be ignored
             buftype = { 'terminal' },
         },
 
