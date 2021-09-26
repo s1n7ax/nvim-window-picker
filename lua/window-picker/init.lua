@@ -25,7 +25,7 @@ function M.filter_windows(window_ids, filter_rules)
     filter_rules = filter_rules or config.filter_rules
 
     -- window option filter
-    if v.tbl_count(filter_rules.wo) > 0 then
+    if filter_rules.wo and v.tbl_count(filter_rules.wo) > 0 then
         window_ids = util.tbl_filter(
                          window_ids, function(winid)
 
@@ -42,7 +42,7 @@ function M.filter_windows(window_ids, filter_rules)
     end
 
     -- buffer option filter
-    if v.tbl_count(filter_rules.bo) > 0 then
+    if filter_rules.bo and v.tbl_count(filter_rules.bo) > 0 then
         window_ids = util.tbl_filter(
                          window_ids, function(winid)
                 local bufid = api.nvim_win_get_buf(winid)
@@ -60,7 +60,8 @@ function M.filter_windows(window_ids, filter_rules)
     end
 
     -- file path filter
-    if v.tbl_count(filter_rules.file_path_contains) > 0 then
+    if filter_rules.file_path_contains and
+        v.tbl_count(filter_rules.file_path_contains) > 0 then
         window_ids = util.tbl_filter(
                          window_ids, function(winid)
                 local bufid = api.nvim_win_get_buf(winid)
@@ -82,7 +83,8 @@ function M.filter_windows(window_ids, filter_rules)
     end
 
     -- file name filter
-    if v.tbl_count(filter_rules.file_name_contains) > 0 then
+    if filter_rules.file_name_contains and
+        v.tbl_count(filter_rules.file_name_contains) > 0 then
         window_ids = util.tbl_filter(
                          window_ids, function(winid)
                 local bufid = api.nvim_win_get_buf(winid)
@@ -128,21 +130,21 @@ function M.pick_window(custom_config)
     -- window function
     v.cmd(
         'highlight NvimWindoSwitch gui=bold guifg=#ededed guibg=' ..
-            config.current_win_hl_color)
+            conf.current_win_hl_color)
     v.cmd(
         'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=' ..
-            config.other_win_hl_color)
+            conf.other_win_hl_color)
 
     local selectable = nil
 
     if conf.filter_func then
-        selectable = conf.filter_func(api.nvim_list_wins(), config)
+        selectable = conf.filter_func(api.nvim_list_wins(), conf)
     else
         selectable = M.filter_windows()
     end
 
     -- whether to include the current window to the list
-    if not config.include_current_win then
+    if not conf.include_current_win then
         selectable = util.tbl_filter(
                          selectable, function(winid)
                 local curr_win = api.nvim_get_current_win()
