@@ -153,7 +153,7 @@ function M.pick_window(custom_config)
     end
 
     -- If there are no selectable windows, return
-    if #selectable == 0 then return -1 end
+    if #selectable == 0 then return nil end
 
     if conf.autoselect_one and v.tbl_count(selectable) == 1 then
         return selectable[1]
