@@ -1,4 +1,4 @@
-# nvim-window-picker (WIP)
+# nvim-window-picker
 
 https://user-images.githubusercontent.com/18459807/134788195-4225bf74-218c-4744-8631-2692132cc602.mp4
 
@@ -19,7 +19,7 @@ use {
 }
 ```
 
-**Make sure to `:PackerCompile` after intalling**
+**Make sure to `:PackerCompile` after installing**
 
 ## How to use
 
