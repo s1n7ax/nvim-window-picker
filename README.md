@@ -1,6 +1,6 @@
 # nvim-window-picker
 
-https://user-images.githubusercontent.com/18459807/134788195-4225bf74-218c-4744-8631-2692132cc602.mp4
+https://user-images.githubusercontent.com/18459807/161597479-a3d8cf73-3dca-44b1-9eb6-d00b4e6eb842.mp4
 
 This plugins prompts the user to pick a window and returns the window id of the picked window.
 Part of the code is from [nvim-tree](https://github.com/kyazdani42/nvim-tree.lua) so shout out to
