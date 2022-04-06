@@ -21,7 +21,7 @@ local api = v.api
 -- @returns { Array<number> } list of window IDs after filtering
 --]]
 function M.filter_windows(window_ids, filter_rules)
-    window_ids = window_ids or api.nvim_list_wins()
+    window_ids = window_ids or api.nvim_tabpage_list_wins(0)
     filter_rules = filter_rules or config.filter_rules
 
     -- window option filter
@@ -138,7 +138,7 @@ function M.pick_window(custom_config)
     local selectable = nil
 
     if conf.filter_func then
-        selectable = conf.filter_func(api.nvim_list_wins(), conf)
+        selectable = conf.filter_func(api.nvim_tabpage_list_wins(0), conf)
     else
         selectable = M.filter_windows()
     end
