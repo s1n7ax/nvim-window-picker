@@ -13,6 +13,7 @@ them for coming up with this idea.
 ```lua
 use {
     's1n7ax/nvim-window-picker',
+    tag = '1.*',
     config = function()
         require'window-picker'.setup()
     end,
