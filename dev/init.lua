@@ -21,7 +21,13 @@ end
 -- executes the run method in the package
 local run_action = function()
     require(package_name).setup()
-    print('you picked: ', require(package_name).pick_window())
+    local window = require(package_name).pick_window()
+
+    if not window then
+        return
+    end
+
+    vim.api.nvim_set_current_win(window)
 end
 
 -- unload and run the function from the package
