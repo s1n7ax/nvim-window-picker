@@ -198,8 +198,10 @@ function M.pick_window(custom_config)
 
     -- Restore window options
     for _, id in ipairs(selectable) do
-        for opt, value in pairs(win_opts[id]) do
-            api.nvim_win_set_option(id, opt, value)
+        if api.nvim_win_is_valid(id) then
+            for opt, value in pairs(win_opts[id]) do
+                api.nvim_win_set_option(id, opt, value)
+            end
         end
     end
 
