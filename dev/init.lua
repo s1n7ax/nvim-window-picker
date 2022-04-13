@@ -23,6 +23,8 @@ local run_action = function()
     require(package_name).setup()
     local window = require(package_name).pick_window()
 
+    print('>>>',window)
+
     if not window then
         return
     end
@@ -39,5 +41,5 @@ end
 ---@diagnostic disable-next-line: undefined-global
 local set_keymap = vim.api.nvim_set_keymap
 
-set_keymap('n', ',r', '<cmd>luafile dev/init.lua<cr>', {})
-set_keymap('n', ',w', '<cmd>lua Reload_and_run()<cr>', {})
+set_keymap('n', '<leader><leader>r', '<cmd>luafile dev/init.lua<cr>', {})
+set_keymap('n', '<leader><leader>w', '<cmd>lua Reload_and_run()<cr>', {})

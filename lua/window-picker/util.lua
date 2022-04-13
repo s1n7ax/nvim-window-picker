@@ -19,7 +19,16 @@ function M.tbl_any(tbl, match_func)
     return false
 end
 
+function M.map_find(tbl, match_func)
+    for key, value in pairs(tbl) do
+        if match_func(key, value) then
+            return { key, value }
+        end
+    end
+end
+
 function M.get_user_input_char()
+    print('Window: ')
     local c = v.fn.getchar()
     while type(c) ~= 'number' do
         c = v.fn.getchar()

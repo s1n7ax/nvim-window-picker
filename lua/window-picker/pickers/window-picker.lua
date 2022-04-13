@@ -1,3 +1,5 @@
+local util = require('window-picker.util')
+
 local M = {}
 M.__index = M
 
@@ -22,12 +24,12 @@ end
 
 function M:_get_windows()
     local all_windows = vim.api.nvim_tabpage_list_wins(0)
-    return self.filter.filter_windows(all_windows)
+    return self.filter:filter_windows(all_windows)
 end
 
 function M:_find_matching_win_for_char(user_input_char, windows)
-    for index, char in ipairs(self.config.chars) do
-        if user_input_char == char then
+    for index, char in ipairs(self.chars) do
+        if user_input_char:lower() == char:lower() then
             return windows[index]
         end
     end
@@ -36,21 +38,20 @@ end
 function M:pick_window()
     local windows = self:_get_windows()
     local window = nil
+    local char = nil
+
     self.printer:draw(windows)
 
-    print('Window: ')
+    local select_window = vim.schedule_wrap(function()
+        char = util.get_user_input_char()
+        self.printer:clear()
+    end)
 
-    while true do
-        local char = vim.fn.getchar()
+    select_window()
 
-        if not char then
-            break
-        end
-
+    if char then
         window = self:_find_matching_win_for_char(char, windows)
     end
-
-    self.printer:clear()
 
     return window
 end

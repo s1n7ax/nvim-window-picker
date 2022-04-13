@@ -4,7 +4,16 @@ local M = {}
 M.__index = M
 
 function M.new()
-    return setmetatable({}, M)
+    local self = setmetatable({}, M)
+
+    self.filter_stack = {
+        self._window_option_filter,
+        self._buffer_options_filter,
+        self._file_path_contains_filter,
+        self._file_path_contains_filter,
+    }
+
+    return self
 end
 
 function M:set_config(config)
@@ -15,12 +24,13 @@ function M:set_config(config)
 end
 
 function M:filter_windows(windows)
-    windows = self:_window_option_filter(windows)
-    windows = self:_buffer_options_filter(windows)
-    windows = self:_file_path_contains_filter(windows)
-    windows = self:_file_path_contains_filter(windows)
+    local filtered_windows = windows
 
-    return windows
+    for _, filter in ipairs(self.filter_stack) do
+        filtered_windows = filter(self, filtered_windows)
+    end
+
+    return filtered_windows
 end
 
 function M:_window_option_filter(windows)
@@ -38,6 +48,8 @@ function M:_window_option_filter(windows)
 
             return true
         end)
+    else
+        return windows
     end
 end
 
@@ -58,6 +70,8 @@ function M:_buffer_options_filter(windows)
 
             return true
         end)
+    else
+        return windows
     end
 end
 
@@ -83,6 +97,8 @@ function M:_file_path_contains_filter(windows)
 
             return not has_match
         end)
+    else
+        return windows
     end
 end
 
@@ -107,6 +123,8 @@ function M:_file_name_contains_filter(windows)
 
             return not has_match
         end)
+    else
+        return windows
     end
 end
 

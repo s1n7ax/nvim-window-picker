@@ -1,6 +1,6 @@
 local dfilter = require('window-picker.filters.default-window-filter')
 local dpicker = require('window-picker.pickers.window-picker')
-local dprompt = require('window-picker.prompt.statusline-prompt')
+local dprompt = require('window-picker.prompts.statusline-prompt')
 local dconfigurer = require('window-picker.configurer')
 
 local M = {}
