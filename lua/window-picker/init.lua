@@ -24,6 +24,11 @@ function M.filter_windows(window_ids, filter_rules)
     window_ids = window_ids or api.nvim_tabpage_list_wins(0)
     filter_rules = filter_rules or config.filter_rules
 
+    -- removing floating windows from the list
+    window_ids = util.tbl_filter(window_ids, function(winid)
+        return not util.is_float(winid)
+    end)
+
     -- window option filter
     if filter_rules.wo and v.tbl_count(filter_rules.wo) > 0 then
         window_ids = util.tbl_filter(

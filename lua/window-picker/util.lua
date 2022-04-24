@@ -25,4 +25,10 @@ function M.clear_prompt()
     v.api.nvim_command('normal :esc<CR>')
 end
 
+function M.is_float(window)
+    local config = v.api.nvim_win_get_config(window)
+
+    return config.relative ~= ''
+end
+
 return M
