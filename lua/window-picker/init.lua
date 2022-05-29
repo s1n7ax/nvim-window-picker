@@ -134,11 +134,11 @@ function M.pick_window(custom_config)
     -- NOTE: somethig clears out the highlights so this needs to be in pick
     -- window function
     v.cmd(
-        'highlight NvimWindoSwitch gui=bold guifg=#ededed guibg=' ..
-            conf.current_win_hl_color)
+        ('highlight NvimWindoSwitch gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.current_win_hl_color)
+    )
     v.cmd(
-        'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=' ..
-            conf.other_win_hl_color)
+        ('highlight NvimWindoSwitchNC gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.other_win_hl_color)
+    )
 
     local selectable = nil
 
