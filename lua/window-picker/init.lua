@@ -212,7 +212,7 @@ function M.pick_window(custom_config)
 
     v.o.laststatus = laststatus
 
-    return win_map[resp]
+    return win_map[resp], resp
 end
 
 function M.setup(custom_config)
