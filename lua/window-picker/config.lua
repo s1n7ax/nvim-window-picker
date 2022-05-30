@@ -47,6 +47,9 @@ local config = {
         file_name_contains = {},
     },
 
+    -- the foreground (text) color of the picker
+    fg_color = '#ededed',
+
     -- if you have include_current_win == true, then current_win_hl_color will
     -- be highlighted using this background color
     current_win_hl_color = '#e35e4f',
