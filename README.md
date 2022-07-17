@@ -28,7 +28,15 @@ use {
 local picked_window_id = require('window-picker').pick_window()
 ```
 
-**You can put the picked window id to good use**
+**You can put the picked window id to good use**,
+for example, set a keymap to switch the current window like this:
+
+```lua
+vim.keymap.set("n", "<leader>w", function()
+    local picked_window_id = picker.pick_window() or vim.api.nvim_get_current_win()
+    vim.api.nvim_set_current_win(picked_window_id)
+end, { desc = "Pick a window" })
+```
 
 ## Configuration
 
