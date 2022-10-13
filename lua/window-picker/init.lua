@@ -164,11 +164,15 @@ function M.pick_window(custom_config)
     local win_opts = {}
     local win_map = {}
 
-    -- calculate if we should use winbar or not
-    local use_winbar = v.opt.cmdheight:get() == 0
+    local use_winbar = false
 
-    if conf.use_winbar ~= nil then
-        use_winbar = conf.use_winbar
+    -- calculate if we should use winbar or not
+    if conf.use_winbar == 'always' then
+        use_winbar = true
+    elseif conf.use_winbar == 'never' then
+        use_winbar = false
+    elseif conf.use_winbar == 'smart' then
+        use_winbar = v.opt.cmdheight:get() == 0
     end
 
     local indicator_setting = use_winbar and 'winbar' or 'statusline'
