@@ -130,6 +130,9 @@ function M.pick_window(custom_config)
         conf = v.tbl_deep_extend('force', conf, custom_config)
     end
 
+    local laststatus = v.o.laststatus
+    local cmdheight = v.o.cmdheight
+
     -- setting highlight groups
     -- NOTE: somethig clears out the highlights so this needs to be in pick
     -- window function
@@ -170,8 +173,9 @@ function M.pick_window(custom_config)
 
     local win_opts = {}
     local win_map = {}
-    local laststatus = v.o.laststatus
+
     v.o.laststatus = 2
+    v.o.cmdheight = 1
 
     -- Setup UI
     for i, id in ipairs(selectable) do
@@ -211,6 +215,7 @@ function M.pick_window(custom_config)
     end
 
     v.o.laststatus = laststatus
+    v.o.cmdheight = cmdheight
 
     return win_map[resp]
 end
