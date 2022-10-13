@@ -58,9 +58,10 @@ require 'window-picker'.setup({
     selection_chars = 'FJDKSLA;CMRUEIWOQP',
 
     -- whether you want to use winbar instead of the statusline
-    -- true means to always use winbar, false means to never use winbar
-    -- nil means to use winbar if cmdheight=0  and statusline if cmdheight > 0
-    use_winbar = nil,
+    -- true means to always use winbar,
+    -- false means to never use winbar
+    -- nil means to use winbar if cmdheight=0 and statusline if cmdheight > 0
+    use_winbar = false,
 
     -- if you want to manually filter out the windows, pass in a function that
     -- takes two parameters. you should return window ids that should be
