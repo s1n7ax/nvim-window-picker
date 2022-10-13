@@ -163,13 +163,17 @@ function M.pick_window(custom_config)
 
     local win_opts = {}
     local win_map = {}
+
     -- calculate if we should use winbar or not
-    local use_winbar = vim.opt.cmdheight:get() == 0
+    local use_winbar = v.opt.cmdheight:get() == 0
+
     if conf.use_winbar ~= nil then
         use_winbar = conf.use_winbar
     end
+
     local indicator_setting = use_winbar and 'winbar' or 'statusline'
     local indicator_hl = use_winbar and 'WinBar' or 'StatusLine'
+
     if not use_winbar then
         v.o.laststatus = 2
         v.o.cmdheight = 1
