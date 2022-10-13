@@ -31,81 +31,73 @@ function M.filter_windows(window_ids, filter_rules)
 
     -- window option filter
     if filter_rules.wo and v.tbl_count(filter_rules.wo) > 0 then
-        window_ids = util.tbl_filter(
-                         window_ids, function(winid)
+        window_ids = util.tbl_filter(window_ids, function(winid)
+            for opt_key, opt_values in pairs(filter_rules.wo) do
+                local actual_opt = api.nvim_win_get_option(winid, opt_key)
 
-                for opt_key, opt_values in pairs(filter_rules.wo) do
-                    local actual_opt = api.nvim_win_get_option(winid, opt_key)
+                local has_value = v.tbl_contains(opt_values, actual_opt)
 
-                    local has_value = v.tbl_contains(opt_values, actual_opt)
-
-                    if has_value then return false end
+                if has_value then
+                    return false
                 end
+            end
 
-                return true
-            end)
+            return true
+        end)
     end
 
     -- buffer option filter
     if filter_rules.bo and v.tbl_count(filter_rules.bo) > 0 then
-        window_ids = util.tbl_filter(
-                         window_ids, function(winid)
-                local bufid = api.nvim_win_get_buf(winid)
+        window_ids = util.tbl_filter(window_ids, function(winid)
+            local bufid = api.nvim_win_get_buf(winid)
 
-                for opt_key, opt_values in pairs(filter_rules.bo) do
-                    local actual_opt = api.nvim_buf_get_option(bufid, opt_key)
+            for opt_key, opt_values in pairs(filter_rules.bo) do
+                local actual_opt = api.nvim_buf_get_option(bufid, opt_key)
 
-                    local has_value = v.tbl_contains(opt_values, actual_opt)
+                local has_value = v.tbl_contains(opt_values, actual_opt)
 
-                    if has_value then return false end
+                if has_value then
+                    return false
                 end
+            end
 
-                return true
-            end)
+            return true
+        end)
     end
 
     -- file path filter
-    if filter_rules.file_path_contains and
-        v.tbl_count(filter_rules.file_path_contains) > 0 then
-        window_ids = util.tbl_filter(
-                         window_ids, function(winid)
-                local bufid = api.nvim_win_get_buf(winid)
-                local filepath = api.nvim_buf_get_name(bufid)
+    if filter_rules.file_path_contains and v.tbl_count(filter_rules.file_path_contains) > 0 then
+        window_ids = util.tbl_filter(window_ids, function(winid)
+            local bufid = api.nvim_win_get_buf(winid)
+            local filepath = api.nvim_buf_get_name(bufid)
 
-                local has_match = util.tbl_any(
-                                      filter_rules.file_path_contains,
-                                      function(exp_path)
+            local has_match = util.tbl_any(filter_rules.file_path_contains, function(exp_path)
+                exp_path = util.escape_pattern(exp_path)
 
-                        exp_path = util.escape_pattern(exp_path)
-
-                        if filepath:find(exp_path) then
-                            return true
-                        end
-                    end)
-
-                return not (has_match)
+                if filepath:find(exp_path) then
+                    return true
+                end
             end)
+
+            return not has_match
+        end)
     end
 
     -- file name filter
-    if filter_rules.file_name_contains and
-        v.tbl_count(filter_rules.file_name_contains) > 0 then
-        window_ids = util.tbl_filter(
-                         window_ids, function(winid)
-                local bufid = api.nvim_win_get_buf(winid)
-                local filepath = api.nvim_buf_get_name(bufid)
-                local filename = filepath:match('^.*/(.+)$')
+    if filter_rules.file_name_contains and v.tbl_count(filter_rules.file_name_contains) > 0 then
+        window_ids = util.tbl_filter(window_ids, function(winid)
+            local bufid = api.nvim_win_get_buf(winid)
+            local filepath = api.nvim_buf_get_name(bufid)
+            local filename = filepath:match('^.*/(.+)$')
 
-                local has_match = util.tbl_any(
-                                      filter_rules.file_name_contains,
-                                      function(exp_name)
-                        if filename:find(exp_name) then
-                            return true
-                        end
-                    end)
-
-                return not (has_match)
+            local has_match = util.tbl_any(filter_rules.file_name_contains, function(exp_name)
+                if filename:find(exp_name) then
+                    return true
+                end
             end)
+
+            return not has_match
+        end)
     end
 
     return window_ids
@@ -120,8 +112,7 @@ end
 --]]
 function M.pick_window(custom_config)
     if not M.setup_completed then
-        error(
-            'nvim-window-selector: you should first call setup() when loading the plugin')
+        error('nvim-window-selector: you should first call setup() when loading the plugin')
     end
 
     local conf = config
@@ -136,12 +127,8 @@ function M.pick_window(custom_config)
     -- setting highlight groups
     -- NOTE: somethig clears out the highlights so this needs to be in pick
     -- window function
-    v.cmd(
-        ('highlight NvimWindoSwitch gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.current_win_hl_color)
-    )
-    v.cmd(
-        ('highlight NvimWindoSwitchNC gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.other_win_hl_color)
-    )
+    v.cmd(('highlight NvimWindoSwitch gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.current_win_hl_color))
+    v.cmd(('highlight NvimWindoSwitchNC gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.other_win_hl_color))
 
     local selectable = nil
 
@@ -153,17 +140,20 @@ function M.pick_window(custom_config)
 
     -- whether to include the current window to the list
     if not conf.include_current_win then
-        selectable = util.tbl_filter(
-                         selectable, function(winid)
-                local curr_win = api.nvim_get_current_win()
-                if winid == curr_win then return false end
+        selectable = util.tbl_filter(selectable, function(winid)
+            local curr_win = api.nvim_get_current_win()
+            if winid == curr_win then
+                return false
+            end
 
-                return true
-            end)
+            return true
+        end)
     end
 
     -- If there are no selectable windows, return
-    if #selectable == 0 then return nil end
+    if #selectable == 0 then
+        return nil
+    end
 
     if conf.autoselect_one and v.tbl_count(selectable) == 1 then
         return selectable[1]
@@ -173,30 +163,38 @@ function M.pick_window(custom_config)
 
     local win_opts = {}
     local win_map = {}
-
-    v.o.laststatus = 2
-    v.o.cmdheight = 1
+    -- calculate if we should use winbar or not
+    local use_winbar = vim.opt.cmdheight:get() == 0
+    if conf.use_winbar ~= nil then
+        use_winbar = conf.use_winbar
+    end
+    local indicator_setting = use_winbar and 'winbar' or 'statusline'
+    local indicator_hl = use_winbar and 'WinBar' or 'StatusLine'
+    if not use_winbar then
+        v.o.laststatus = 2
+        v.o.cmdheight = 1
+    end
 
     -- Setup UI
     for i, id in ipairs(selectable) do
         local char = chars:sub(i, i)
-        local ok_status, statusline = pcall(
-                                          api.nvim_win_get_option, id,
-                                          'statusline')
+        local ok_status, indicator = pcall(api.nvim_win_get_option, id, indicator_setting)
         local ok_hl, winhl = pcall(api.nvim_win_get_option, id, 'winhl')
 
         win_opts[id] = {
-            statusline = ok_status and statusline or '',
+            [indicator_setting] = ok_status and indicator or '',
             winhl = ok_hl and winhl or '',
         }
 
         win_map[char] = id
 
-        api.nvim_win_set_option(id, 'statusline', '%=' .. char .. '%=')
+        api.nvim_win_set_option(id, indicator_setting, '%=' .. char .. '%=')
 
         api.nvim_win_set_option(
-            id, 'winhl',
-            'StatusLine:NvimWindoSwitch,StatusLineNC:NvimWindoSwitchNC')
+            id,
+            'winhl',
+            indicator_hl .. ':NvimWindoSwitch,' .. indicator_hl .. 'NC:NvimWindoSwitchNC'
+        )
     end
 
     v.cmd('redraw')
@@ -214,8 +212,10 @@ function M.pick_window(custom_config)
         end
     end
 
-    v.o.laststatus = laststatus
-    v.o.cmdheight = cmdheight
+    if not use_winbar then
+        v.o.laststatus = laststatus
+        v.o.cmdheight = cmdheight
+    end
 
     return win_map[resp]
 end

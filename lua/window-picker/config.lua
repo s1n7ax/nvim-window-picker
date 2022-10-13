@@ -11,6 +11,11 @@ local config = {
     -- following letters on them so you can use that letter to select the window
     selection_chars = 'FJDKSLA;CMRUEIWOQP',
 
+    -- whether you want to use winbar instead of the statusline
+    -- true means to always use winbar, false means to never use winbar
+    -- nil means to use winbar if cmdheight=0  and statusline if cmdheight > 0
+    use_winbar = nil,
+
     -- if you want to manually filter out the windows, pass in a function that
     -- takes two parameters. you should return window ids that should be
     -- included in the selection
@@ -29,7 +34,7 @@ local config = {
         -- filter using buffer options
         bo = {
             -- if the file type is one of following, the window will be ignored
-            filetype = { 'NvimTree', "neo-tree", "notify" },
+            filetype = { 'NvimTree', 'neo-tree', 'notify' },
 
             -- if the file type is one of following, the window will be ignored
             buftype = { 'terminal' },
