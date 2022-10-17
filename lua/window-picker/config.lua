@@ -63,6 +63,11 @@ local config = {
     -- all the windows except the curren window will be highlighted using this
     -- color
     other_win_hl_color = '#44cc41',
+
+    -- highlight position
+    -- "all" highlight all
+    -- "center" highlight only in the center
+    hl_position = 'all', -- "all" | "center"
 }
 
 return config

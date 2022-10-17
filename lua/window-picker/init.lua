@@ -139,9 +139,9 @@ function M.pick_window(custom_config)
     end
 
     -- whether to include the current window to the list
+    local curr_win = api.nvim_get_current_win()
     if not conf.include_current_win then
         selectable = util.tbl_filter(selectable, function(winid)
-            local curr_win = api.nvim_get_current_win()
             if winid == curr_win then
                 return false
             end
@@ -187,22 +187,43 @@ function M.pick_window(custom_config)
     for i, id in ipairs(selectable) do
         local char = chars:sub(i, i)
         local ok_status, indicator = pcall(api.nvim_win_get_option, id, indicator_setting)
-        local ok_hl, winhl = pcall(api.nvim_win_get_option, id, 'winhl')
 
         win_opts[id] = {
             [indicator_setting] = ok_status and indicator or '',
-            winhl = ok_hl and winhl or '',
         }
 
         win_map[char] = id
 
-        api.nvim_win_set_option(id, indicator_setting, '%=' .. char .. '%=')
+        local hl_group = id == curr_win and 'NvimWindoSwitch' or 'NvimWindoSwitchNC'
+        if conf.hl_position == 'center' then
+            local win_length = vim.fn.winwidth(id)
+            local left_char_padding = 5
+            local right_char_padding = 5
 
-        api.nvim_win_set_option(
-            id,
-            'winhl',
-            indicator_hl .. ':NvimWindoSwitch,' .. indicator_hl .. 'NC:NvimWindoSwitchNC'
-        )
+            if win_length < left_char_padding + right_char_padding + #char then
+                left_char_padding = 0
+            end
+
+            local padding =
+                string.rep(' ', (vim.fn.winwidth(id) - (left_char_padding + right_char_padding + #char)) / 2)
+
+            api.nvim_win_set_option(
+                id,
+                indicator_setting,
+                string.format(
+                    '%%#%sNC#%s%%#%s#%s%s%s%%#%sNC#%%=',
+                    indicator_hl,
+                    padding,
+                    hl_group,
+                    string.rep(' ', left_char_padding),
+                    char,
+                    string.rep(' ', right_char_padding),
+                    indicator_hl
+                )
+            )
+        else
+            api.nvim_win_set_option(id, indicator_setting, string.format('%%#%s#%%=%s%%=', hl_group, char))
+        end
     end
 
     v.cmd('redraw')
