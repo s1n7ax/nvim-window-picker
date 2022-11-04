@@ -7,6 +7,10 @@ local config = {
     -- selection or not
     include_current_win = false,
 
+    -- select the current window if no results are returned after taking
+    -- "include_current_win" and filters are taken into consideration
+    select_current_if_no_results = false,
+
     -- when you go to window selection mode, status bar will show one of
     -- following letters on them so you can use that letter to select the window
     selection_chars = 'FJDKSLA;CMRUEIWOQP',

@@ -140,18 +140,18 @@ function M.pick_window(custom_config)
 
     -- whether to include the current window to the list
     if not conf.include_current_win then
+        local curr_win = api.nvim_get_current_win()
         selectable = util.tbl_filter(selectable, function(winid)
-            local curr_win = api.nvim_get_current_win()
-            if winid == curr_win then
-                return false
-            end
-
-            return true
+            return winid ~= curr_win
         end)
     end
 
     -- If there are no selectable windows, return
     if #selectable == 0 then
+        if conf.select_current_if_no_results then
+            return api.nvim_get_current_win()
+        end
+
         return nil
     end
 
