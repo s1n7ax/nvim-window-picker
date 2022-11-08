@@ -11,6 +11,11 @@ local config = {
     -- following letters on them so you can use that letter to select the window
     selection_chars = 'FJDKSLA;CMRUEIWOQP',
 
+    -- You can change the display string in status bar.
+    -- It supports '%' printf style. Such as `return char .. ': %f'` to display
+    -- buffer filepath. See :h 'stl' for details.
+    selection_display = function (char) return char end,
+
     -- whether you want to use winbar instead of the statusline
     -- "always" means to always use winbar,
     -- "never" means to never use winbar

@@ -109,6 +109,11 @@ require 'window-picker'.setup({
     -- all the windows except the curren window will be highlighted using this
     -- color
     other_win_hl_color = '#44cc41',
+
+    -- You can change the display string in status bar.
+    -- It supports '%' printf style. Such as `return char .. ': %f'` to display
+    -- buffer filepath. See :h 'stl' for details.
+    selection_display = function (char) return char end,
 })
 ```
 
