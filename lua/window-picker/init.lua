@@ -196,7 +196,7 @@ function M.pick_window(custom_config)
 
         win_map[char] = id
 
-        api.nvim_win_set_option(id, indicator_setting, '%=' .. char .. '%=')
+        api.nvim_win_set_option(id, indicator_setting, '%=' .. conf.selection_display(char) .. '%=')
 
         api.nvim_win_set_option(
             id,
