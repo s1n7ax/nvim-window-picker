@@ -180,7 +180,9 @@ function M.pick_window(custom_config)
 
     if not use_winbar then
         v.o.laststatus = 2
-        v.o.cmdheight = 1
+        if conf.use_cmd then
+            v.o.cmdheight = 1
+        end
     end
 
     -- Setup UI
@@ -206,7 +208,9 @@ function M.pick_window(custom_config)
     end
 
     v.cmd('redraw')
-    print('Pick window: ')
+    if conf.use_cmd then
+        print('Pick window: ')
+    end
     local _, resp = pcall(util.get_user_input_char)
     resp = (resp or ''):upper()
     util.clear_prompt()

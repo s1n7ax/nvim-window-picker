@@ -22,6 +22,9 @@ local config = {
     -- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
     use_winbar = 'never', -- "always" | "never" | "smart"
 
+    -- whether to show 'Pick window:' message in command line
+    use_cmd = true,
+
     -- if you want to manually filter out the windows, pass in a function that
     -- takes two parameters. you should return window ids that should be
     -- included in the selection
