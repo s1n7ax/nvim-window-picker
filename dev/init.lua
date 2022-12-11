@@ -33,5 +33,5 @@ end
 ---@diagnostic disable-next-line: undefined-global
 local set_keymap = vim.api.nvim_set_keymap
 
-set_keymap('n', ',r', '<cmd>luafile dev/init.lua<cr>', {})
-set_keymap('n', ',w', '<cmd>lua Reload_and_run()<cr>', {})
+set_keymap('n', '<leader><leader>r', '<cmd>luafile dev/init.lua<cr>', {})
+set_keymap('n', '<leader><leader>w', '<cmd>lua Reload_and_run()<cr>', {})
