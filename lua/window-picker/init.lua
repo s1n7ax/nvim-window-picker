@@ -127,8 +127,9 @@ function M.pick_window(custom_config)
     -- setting highlight groups
     -- NOTE: somethig clears out the highlights so this needs to be in pick
     -- window function
-    v.cmd(('highlight NvimWindoSwitch gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.current_win_hl_color))
-    v.cmd(('highlight NvimWindoSwitchNC gui=bold guifg=%s guibg=%s'):format(conf.fg_color, conf.other_win_hl_color))
+    local hl = vim.api.nvim_set_hl
+    hl(0, 'NvimWindoSwitch', { fg = conf.fg_color, bg = conf.current_win_hl_color, bold = true })
+    hl(0, 'NvimWindoSwitchNC', { fg = conf.fg_color, bg = conf.other_win_hl_color, bold = true })
 
     local selectable = nil
 
