@@ -1,13 +1,20 @@
+---@class StatuslineHint
+---@field window_options table<string, any> window options
+---@field global_options table<string, any> global options
+---@field laststatus string current value of the laststatus
 local M = {}
-M.__index = M
 
-function M.new()
-	local self = setmetatable({}, M)
+function M:new()
+	local o = {
+		window_options = {},
+		global_options = {},
+		laststatus = vim.o.laststatus,
+	}
 
-	self.window_options = {}
-	self.laststatus = vim.o.laststatus
+	setmetatable(o, M)
+	self.__index = self
 
-	return self
+	return o
 end
 
 function M:set_config(config)
@@ -19,8 +26,14 @@ end
 -- M:_set_highlight_groups sets highlight groups
 -- @param { any } config passes colors
 function M:_set_highlight_groups()
-	vim.cmd("highlight NvimWindoSwitch gui=bold guifg=#ededed guibg=" .. self.current_win_hl_color)
-	vim.cmd("highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg=" .. self.other_win_hl_color)
+	vim.cmd(
+		'highlight NvimWindoSwitch gui=bold guifg=#ededed guibg='
+			.. self.current_win_hl_color
+	)
+	vim.cmd(
+		'highlight NvimWindoSwitchNC gui=bold guifg=#ededed guibg='
+			.. self.other_win_hl_color
+	)
 end
 
 -- M:_save_window_options saves the initial window options later will be changed
@@ -28,10 +41,12 @@ end
 function M:_save_window_options(windows)
 	for _, window in ipairs(windows) do
 		self.window_options[window] = {
-			statusline = vim.api.nvim_win_get_option(window, "statusline"),
-			winhl = vim.api.nvim_win_get_option(window, "winhl"),
+			statusline = vim.wo[window].statusline,
+			winhl = vim.wo[window].winhl,
 		}
 	end
+
+	self.global_options['cmdheight'] = vim.o.cmdheight
 end
 
 -- M:print shows the characters in status line
@@ -45,11 +60,16 @@ function M:draw(windows)
 
 	for index, window in ipairs(windows) do
 		local char = self.chars[index]
-		vim.api.nvim_win_set_option(window, "statusline", "%=" .. char .. "%=")
-		vim.api.nvim_win_set_option(window, "winhl", "StatusLine:NvimWindoSwitch,StatusLineNC:NvimWindoSwitchNC")
+		vim.wo[window].statusline = '%=' .. char .. '%='
+		vim.wo[window].winhl =
+			'StatusLine:NvimWindoSwitch,StatusLineNC:NvimWindoSwitchNC'
 	end
 
-	vim.cmd("redraw")
+	if self.global_options.cmdheight == 0 then
+		vim.o.cmdheight = 1
+	end
+
+	vim.cmd('redraw')
 end
 
 -- M:clear the screen after print
@@ -57,12 +77,16 @@ function M:clear()
 	vim.o.laststatus = self.laststatus
 
 	for window, options in pairs(self.window_options) do
-		for option, value in pairs(options) do
-			vim.api.nvim_win_set_option(window, option, value)
+		for opt_key, opt_value in pairs(options) do
+			vim.wo[window][opt_key] = opt_value
 		end
 	end
 
 	self.window_options = {}
+
+	for key, value in pairs(self.global_options) do
+		vim.o[key] = value
+	end
 end
 
 return M
