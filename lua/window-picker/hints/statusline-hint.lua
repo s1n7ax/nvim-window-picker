@@ -69,9 +69,12 @@ function M:draw(windows)
 	for index, window in ipairs(windows) do
 		local char = self.chars[index]
 
-		vim.wo[window].statusline = self.selection_display
+
+		local display_text = self.selection_display
 				and self.selection_display(char, window)
 			or '%=' .. char .. '%='
+
+		vim.wo[window].statusline = display_text
 
 		vim.wo[window].winhl =
 			'StatusLine:WindowPickerStatusLine,StatusLineNC:WindowPickerStatusLineNC'
@@ -84,7 +87,7 @@ end
 function M:clear()
 	for window, options in pairs(self.window_options) do
 		for opt_key, opt_value in pairs(options) do
-			vim.wo[window][opt_key] = opt_value
+			pcall(vim.api.nvim_win_set_option, window, opt_key, opt_value)
 		end
 	end
 

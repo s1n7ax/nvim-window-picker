@@ -72,18 +72,44 @@ function M:draw(windows)
 
 	for index, window in ipairs(windows) do
 		local char = self.chars[index]
-
-		vim.wo[window][indicator_setting] = self.selection_display
+		local display_text = self.selection_display
 				and self.selection_display(char, window)
 			or '%=' .. char .. '%='
 
-		vim.wo[window].winhl = string.format(
+		local winhl = string.format(
 			'%s:WindowPicker%s,%sNC:WindowPicker%sNC',
 			indicator_hl,
 			indicator_hl,
 			indicator_hl,
 			indicator_hl
 		)
+
+		local ok, result = pcall(
+			vim.api.nvim_win_set_option,
+			window,
+			indicator_setting,
+			display_text
+		)
+
+		if not ok then
+			local buffer = vim.api.nvim_win_get_buf(window)
+			local message = 'Unable to set '
+				.. indicator_setting
+				.. ' for window id::'
+				.. window
+				.. '\n'
+				.. 'filetype::'
+				.. vim.bo[buffer]['filetype']
+				.. '\n'
+				.. 'consider ignoring unwanted windows using filter options\n'
+				.. 'actual error\n'
+				.. result
+
+			vim.notify(message, vim.log.levels.WARN)
+		end
+
+		--  pcall(vim.api.nvim_win_set_option, window, 'winhl', winhl)
+		vim.wo[window]['winhl'] = winhl
 	end
 
 	vim.cmd.redraw()

@@ -3,6 +3,7 @@ local M = {}
 function M.escape_pattern(text)
 	return text:gsub('([^%w])', '%%%1')
 end
+
 function M.tbl_filter(tbl, filter_func)
 	return vim.tbl_filter(filter_func, tbl)
 end
