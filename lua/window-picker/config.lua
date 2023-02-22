@@ -11,12 +11,28 @@ local config = {
 	-- following letters on them so you can use that letter to select the window
 	selection_chars = 'FJDKSLA;CMRUEIWOQP',
 
+	-- You can change the display string in status bar.
+	-- It supports '%' printf style. Such as `return char .. ': %f'` to display
+	-- buffer filepath. See :h 'stl' for details.
+	selection_display = function(char, windowid)
+		return '%=' .. char .. '%='
+	end,
+
+	-- whether you want to use winbar instead of the statusline
+	-- "always" means to always use winbar,
+	-- "never" means to never use winbar
+	-- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
+	use_winbar = 'smart', -- "always" | "never" | "smart"
+
+	-- whether to show 'Pick window:' prompt
+	show_prompt = true,
+
 	-- if you want to manually filter out the windows, pass in a function that
-	-- takes two parameters. you should return window ids that should be
+	-- takes two parameters. You should return window ids that should be
 	-- included in the selection
 	-- EX:-
 	-- function(window_ids, filters)
-	--    -- filder the window_ids
+	--    -- folder the window_ids
 	--    -- return only the ones you want to include
 	--    return {1000, 1001}
 	-- end
@@ -46,6 +62,9 @@ local config = {
 		-- ignored
 		file_name_contains = {},
 	},
+
+	-- the foreground (text) color of the picker
+	fg_color = '#ededed',
 
 	-- if you have include_current_win == true, then current_win_hl_color will
 	-- be highlighted using this background color
