@@ -1,19 +1,20 @@
 # nvim-window-picker
 
-https://user-images.githubusercontent.com/18459807/161597479-a3d8cf73-3dca-44b1-9eb6-d00b4e6eb842.mp4
+<https://user-images.githubusercontent.com/18459807/161597479-a3d8cf73-3dca-44b1-9eb6-d00b4e6eb842.mp4>
 
-This plugins prompts the user to pick a window and returns the window id of the picked window.
-Part of the code is from [nvim-tree](https://github.com/kyazdani42/nvim-tree.lua) so shout out to
-them for coming up with this idea.
+This plugins prompts the user to pick a window and returns the window id of the
+picked window. Part of the code is from
+[nvim-tree](https://github.com/kyazdani42/nvim-tree.lua) so shout out to them
+for coming up with this idea.
 
 ## Install
 
-#### packer
+### packer
 
 ```lua
 use {
     's1n7ax/nvim-window-picker',
-    tag = 'v1.*',
+    tag = 'v2.*',
     config = function()
         require'window-picker'.setup()
     end,
@@ -28,33 +29,45 @@ use {
 local picked_window_id = require('window-picker').pick_window()
 ```
 
-**You can put the picked window id to good use**
+You can put the picked window id to good use
 
 ## Configuration
 
 If you want to have custom properties just for one time, you can pass any of
-following directly to `pick_window()` function itself.
+following directly to `pick_window()` function itself to override the default
+behaviour.
 
 ```lua
 require 'window-picker'.setup({
-    -- when there is only one window available to pick from, use that window
-    -- without prompting the user to select
-    autoselect_one = true,
-
-    -- whether you want to include the window you are currently on to window
-    -- selection or not
-    include_current_win = false,
-
     -- when you go to window selection mode, status bar will show one of
     -- following letters on them so you can use that letter to select the window
     selection_chars = 'FJDKSLA;CMRUEIWOQP',
 
+    -- You can change the display string in status bar.
+    -- It supports '%' printf style. Such as `return char .. ': %f'` to display
+    -- buffer filepath. See :h 'stl' for details.
+    selection_display = function(char, windowid)
+        return '%=' .. char .. '%='
+    end,
+
+    -- whether you want to use winbar instead of the statusline
+    -- "always" means to always use winbar,
+    -- "never" means to never use winbar
+    -- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
+    use_winbar = 'smart', -- "always" | "never" | "smart"
+
+    -- whether to show 'Pick window:' prompt
+    show_prompt = false,
+
+    -- prompt message to show to get the user input
+    prompt_message = 'Pick window: ',
+
     -- if you want to manually filter out the windows, pass in a function that
-    -- takes two parameters. you should return window ids that should be
+    -- takes two parameters. You should return window ids that should be
     -- included in the selection
     -- EX:-
     -- function(window_ids, filters)
-    --    -- filter the window_ids
+    --    -- folder the window_ids
     --    -- return only the ones you want to include
     --    return {1000, 1001}
     -- end
@@ -64,12 +77,20 @@ require 'window-picker'.setup({
     -- defined by this plugin. if you pass in a function to "filter_func"
     -- property, you are on your own
     filter_rules = {
+        -- when there is only one window available to pick from, use that window
+        -- without prompting the user to select
+        autoselect_one = true,
+
+        -- whether you want to include the window you are currently on to window
+        -- selection or not
+        include_current_win = false,
+
         -- filter using buffer options
         bo = {
             -- if the file type is one of following, the window will be ignored
-            filetype = { 'NvimTree', "neo-tree", "notify" },
+            filetype = { 'NvimTree', 'neo-tree', 'notify' },
 
-            -- if the buffer type is one of following, the window will be ignored
+            -- if the file type is one of following, the window will be ignored
             buftype = { 'terminal' },
         },
 
@@ -85,6 +106,9 @@ require 'window-picker'.setup({
         file_name_contains = {},
     },
 
+    -- the foreground (text) color of the picker
+    fg_color = '#ededed',
+
     -- if you have include_current_win == true, then current_win_hl_color will
     -- be highlighted using this background color
     current_win_hl_color = '#e35e4f',
@@ -97,12 +121,21 @@ require 'window-picker'.setup({
 
 ```lua
 require(package_name).pick_window({
-    include_current_win = true,
     selection_chars = '123345',
     filter_rules = {
+        include_current_win = true,
         bo = {
             filetype = {'markdown'}
         }
     },
 })
 ```
+
+## Breaking changes in v2.0.0
+
+_Before_: return value from `selection_display` will be wrapped by `'%='` and
+`'%='` to fill the empty space of status line or winbar.
+
+_After_: return value of `selection_display` will be passed directly to the
+status line or winbar. This allows all the customizations available from
+statusline syntax. You can check `:help statusline` for more info.

@@ -19,6 +19,7 @@ function M:new()
 		o._buffer_options_filter,
 		o._file_path_contains_filter,
 		o._file_path_contains_filter,
+		o._current_window_filter,
 	}
 
 	return o
@@ -29,6 +30,7 @@ function M:set_config(config)
 	self.buffer_options = config.bo or {}
 	self.file_name_contains = config.file_name_contains or {}
 	self.file_path_contains = config.file_path_contains or {}
+	self.include_current_win = config.include_current_win
 end
 
 function M:filter_windows(windows)
@@ -134,6 +136,18 @@ function M:_file_name_contains_filter(windows)
 	else
 		return windows
 	end
+end
+
+function M:_current_window_filter(windows)
+	if self.include_current_win then
+		return windows
+	end
+
+	local curr_win = vim.api.nvim_get_current_win()
+
+	return util.tbl_filter(windows, function(winid)
+		return winid ~= curr_win
+	end)
 end
 
 return M

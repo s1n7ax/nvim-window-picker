@@ -1,12 +1,4 @@
 local config = {
-	-- when there is only one window available to pick from, use that window
-	-- without prompting the user to select
-	autoselect_one = true,
-
-	-- whether you want to include the window you are currently on to window
-	-- selection or not
-	include_current_win = false,
-
 	-- when you go to window selection mode, status bar will show one of
 	-- following letters on them so you can use that letter to select the window
 	selection_chars = 'FJDKSLA;CMRUEIWOQP',
@@ -22,10 +14,13 @@ local config = {
 	-- "always" means to always use winbar,
 	-- "never" means to never use winbar
 	-- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
-	use_winbar = 'smart', -- "always" | "never" | "smart"
+	use_winbar = 'never', -- "always" | "never" | "smart"
 
 	-- whether to show 'Pick window:' prompt
 	show_prompt = true,
+
+	-- prompt message to show to get the user input
+	prompt_message = 'Pick window: ',
 
 	-- if you want to manually filter out the windows, pass in a function that
 	-- takes two parameters. You should return window ids that should be
@@ -42,6 +37,14 @@ local config = {
 	-- defined by this plugin. if you pass in a function to "filter_func"
 	-- property, you are on your own
 	filter_rules = {
+		-- when there is only one window available to pick from, use that window
+		-- without prompting the user to select
+		autoselect_one = true,
+
+		-- whether you want to include the window you are currently on to window
+		-- selection or not
+		include_current_win = false,
+
 		-- filter using buffer options
 		bo = {
 			-- if the file type is one of following, the window will be ignored

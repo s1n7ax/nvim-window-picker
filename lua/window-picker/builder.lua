@@ -1,6 +1,7 @@
+local dconfig = require('window-picker.config')
 local dfilter = require('window-picker.filters.default-window-filter')
 local dpicker = require('window-picker.pickers.window-picker')
-local dhint = require('window-picker.hints.statusline-hint')
+local dhint = require('window-picker.hints.statusline-winbar-hint')
 local dconfigurer = require('window-picker.configurer')
 
 --- @class DefaultBuilder
@@ -17,7 +18,7 @@ function M:new(configurer)
 end
 
 function M:set_config(config)
-	self.config = config
+	self.config = vim.tbl_deep_extend('force', dconfig, config or {})
 	return self
 end
 

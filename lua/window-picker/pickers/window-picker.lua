@@ -14,6 +14,9 @@ end
 
 function M:set_config(config)
 	self.chars = config.chars
+	self.show_prompt = config.show_prompt
+	self.prompt_message = config.prompt_message
+	self.autoselect_one = config.filter_rules.autoselect_one
 	return self
 end
 
@@ -42,13 +45,25 @@ end
 
 function M:pick_window()
 	local windows = self:_get_windows()
+
+	if self.autoselect_one and #windows == 1 then
+		return windows[1]
+	end
+
 	local window = nil
 
 	self.hint:draw(windows)
 
 	vim.cmd.redraw()
 
+	if self.show_prompt then
+		print(self.prompt_message)
+	end
+
 	local char = util.get_user_input_char()
+
+	vim.cmd.redraw()
+
 	self.hint:clear()
 
 	if char then

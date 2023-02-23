@@ -27,7 +27,6 @@ function M.map_find(tbl, match_func)
 end
 
 function M.get_user_input_char()
-	print('Window: ')
 	local c = vim.fn.getchar()
 	while type(c) ~= 'number' do
 		c = vim.fn.getchar()
