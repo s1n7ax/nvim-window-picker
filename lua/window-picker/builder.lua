@@ -18,31 +18,33 @@ function M:new(configurer)
 end
 
 function M:set_config(config)
-	self.config = vim.tbl_deep_extend('force', dconfig, config or {})
+	self.config = config
 	return self
 end
 
 function M:set_picker(picker)
-	self.picker = picker or dpicker:new()
+	self.picker = picker
 	return self
 end
 
 function M:set_hint(hint)
-	self.hint = hint or dhint:new()
+	self.hint = hint
 	return self
 end
 
 function M:set_filter(filter)
-	self.filter = filter or dfilter:new()
+	self.filter = filter
 	return self
 end
 
 function M:build()
-	local configurer = self.configurer or dconfigurer:new(self.config)
+	local config = vim.tbl_deep_extend('force', dconfig, self.config or {})
 
-	local hint = configurer:config_hint(self.hint)
-	local filter = configurer:config_filter(self.filter)
-	local picker = configurer:config_picker(self.picker)
+	local configurer = self.configurer or dconfigurer:new(config)
+
+	local hint = configurer:config_hint(self.hint or dhint:new())
+	local filter = configurer:config_filter(self.filter or dfilter:new())
+	local picker = configurer:config_picker(self.picker or dpicker:new())
 
 	picker:set_filter(filter)
 	picker:set_hint(hint)
