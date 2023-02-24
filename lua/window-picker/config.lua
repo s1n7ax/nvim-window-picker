@@ -34,7 +34,7 @@ local config = {
 	filter_func = nil,
 
 	-- following filters are only applied when you are using the default filter
-	-- defined by this plugin. if you pass in a function to "filter_func"
+	-- defined by this plugin. If you pass in a function to "filter_func"
 	-- property, you are on your own
 	filter_rules = {
 		-- when there is only one window available to pick from, use that window
@@ -66,16 +66,34 @@ local config = {
 		file_name_contains = {},
 	},
 
-	-- the foreground (text) color of the picker
-	fg_color = '#ededed',
-
-	-- if you have include_current_win == true, then current_win_hl_color will
-	-- be highlighted using this background color
-	current_win_hl_color = '#e35e4f',
-
-	-- all the windows except the curren window will be highlighted using this
-	-- color
-	other_win_hl_color = '#44cc41',
+	-- You can pass in the highlight name or a table of content to set as
+	-- highlight
+	highlights = {
+		statusline = {
+			focused = {
+				fg = '#ededed',
+				bg = '#e35e4f',
+				bold = true,
+			},
+			unfocused = {
+				fg = '#ededed',
+				bg = '#44cc41',
+				bold = true,
+			},
+		},
+		winbar = {
+			focused = {
+				fg = '#ededed',
+				bg = '#e35e4f',
+				bold = true,
+			},
+			unfocused = {
+				fg = '#ededed',
+				bg = '#44cc41',
+				bold = true,
+			},
+		},
+	},
 }
 
 return config

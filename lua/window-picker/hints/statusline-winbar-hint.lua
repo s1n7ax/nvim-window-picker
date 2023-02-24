@@ -13,29 +13,38 @@ function M:set_config(config)
 	self.use_winbar = config.use_winbar
 	self.show_prompt = config.show_prompt
 
-	vim.api.nvim_set_hl(0, 'WindowPickerStatusLine', {
-		fg = '#ededed',
-		bg = config.current_win_hl_color,
-		bold = true,
-	})
+	-- registering highlights
+	if type(config.highlights.statusline.focused) == 'table' then
+		self.st_hi = 'WindowPickerStatusLine'
+		vim.api.nvim_set_hl(0, self.st_hi, config.highlights.statusline.focused)
+	end
 
-	vim.api.nvim_set_hl(0, 'WindowPickerStatusLineNC', {
-		fg = '#ededed',
-		bg = config.other_win_hl_color,
-		bold = true,
-	})
+	if type(config.highlights.statusline.unfocused) == 'table' then
+		self.st_hi_nc = 'WindowPickerStatusLineNC'
+		vim.api.nvim_set_hl(
+			0,
+			self.st_hi_nc,
+			config.highlights.statusline.unfocused
+		)
+	end
 
-	vim.api.nvim_set_hl(0, 'WindowPickerWinBar', {
-		fg = '#ededed',
-		bg = config.current_win_hl_color,
-		bold = true,
-	})
+	if type(config.highlights.winbar.focused) == 'table' then
+		self.wb_hi = 'WindowPickerWinBar'
+		vim.api.nvim_set_hl(
+			0,
+			self.wb_hi,
+			config.highlights.statusline.unfocused
+		)
+	end
 
-	vim.api.nvim_set_hl(0, 'WindowPickerWinBarNC', {
-		fg = '#ededed',
-		bg = config.other_win_hl_color,
-		bold = true,
-	})
+	if type(config.highlights.winbar.unfocused) == 'table' then
+		self.wb_hi_nc = 'WindowPickerWinBarNC'
+		vim.api.nvim_set_hl(
+			0,
+			self.wb_hi_nc,
+			config.highlights.statusline.unfocused
+		)
+	end
 end
 
 --- Shows the characters in status line
@@ -77,11 +86,11 @@ function M:draw(windows)
 			or '%=' .. char .. '%='
 
 		local winhl = string.format(
-			'%s:WindowPicker%s,%sNC:WindowPicker%sNC',
+			'%s:%s,%sNC:%s',
 			indicator_hl,
+			use_winbar and self.wb_hi or self.st_hi,
 			indicator_hl,
-			indicator_hl,
-			indicator_hl
+			use_winbar and self.wb_hi_nc or self.wb_hi
 		)
 
 		local ok, result = pcall(
