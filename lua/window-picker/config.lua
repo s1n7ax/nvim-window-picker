@@ -3,18 +3,32 @@ local config = {
 	-- following letters on them so you can use that letter to select the window
 	selection_chars = 'FJDKSLA;CMRUEIWOQP',
 
-	-- You can change the display string in status bar.
-	-- It supports '%' printf style. Such as `return char .. ': %f'` to display
-	-- buffer filepath. See :h 'stl' for details.
-	selection_display = function(char, windowid)
-		return '%=' .. char .. '%='
-	end,
+	-- This section contains picker specific configurations
+	picker_config = {
+		statusline_winbar_picker = {
+			-- You can change the display string in status bar.
+			-- It supports '%' printf style. Such as `return char .. ': %f'` to display
+			-- buffer file path. See :h 'stl' for details.
+			selection_display = function(char, windowid)
+				return '%=' .. char .. '%='
+			end,
 
-	-- whether you want to use winbar instead of the statusline
-	-- "always" means to always use winbar,
-	-- "never" means to never use winbar
-	-- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
-	use_winbar = 'never', -- "always" | "never" | "smart"
+			-- whether you want to use winbar instead of the statusline
+			-- "always" means to always use winbar,
+			-- "never" means to never use winbar
+			-- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
+			use_winbar = 'never', -- "always" | "never" | "smart"
+		},
+
+		floating_window_picker = {
+			-- window picker plugin provides bunch of big letter fonts
+			-- fonts will be lazy loaded as they are being requested
+			-- additionally, user can pass in a table of fonts in to font
+			-- property to use instead
+
+			font = 'ansi-shadow', -- ansi-shadow |
+		},
+	},
 
 	-- whether to show 'Pick window:' prompt
 	show_prompt = true,

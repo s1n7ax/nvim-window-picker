@@ -9,9 +9,10 @@ local M = StatuslineHint:new()
 
 function M:set_config(config)
 	self.chars = config.chars
-	self.selection_display = config.selection_display
-	self.use_winbar = config.use_winbar
 	self.show_prompt = config.show_prompt
+
+	self.selection_display = config.picker_config.statusline_winbar_picker.selection_display
+	self.use_winbar = config.picker_config.statusline_winbar_picker.use_winbar
 
 	-- registering highlights
 	if type(config.highlights.statusline.focused) == 'table' then

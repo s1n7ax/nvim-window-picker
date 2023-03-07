@@ -55,6 +55,19 @@ function M._backward_compatibility_config_changes(config)
 		config.highlights.winbar.unfocused.bg = config.other_win_hl_color
 	end
 
+	----------------------------------------------------------------------
+	--                     statusline winbar config                     --
+	----------------------------------------------------------------------
+	if config.selection_display then
+		config.picker_config.statusline_winbar_picker.selection_display =
+			config.selection_display
+	end
+
+	if config.use_winbar then
+		config.picker_config.statusline_winbar_picker.use_winbar =
+			config.use_winbar
+	end
+
 	return config
 end
 

@@ -30,7 +30,7 @@ function M:new()
 			width = 18,
 			height = 8,
 		},
-		windows = {}
+		windows = {},
 	}
 
 	setmetatable(o, M)
@@ -41,6 +41,15 @@ end
 
 function M:set_config(config)
 	self.chars = config.chars
+	local font = config.picker_config.floating_window_picker.font
+
+	if type(font) == 'string' then
+		self.big_chars = require(('window-picker.hints.data.%s'):format(font))
+	end
+
+	if type(font) ==  'table' then
+		self.big_chars = font
+	end
 end
 
 function M:_get_float_win_pos(window)
@@ -116,7 +125,7 @@ end
 function M:draw(windows)
 	for index, window in ipairs(windows) do
 		local char = self.chars[index]
-		local big_char = ansi_shadow[char:lower()]
+		local big_char = self.big_chars[char:lower()]
 		local window_id = self:_show_letter_in_window(window, big_char)
 		table.insert(self.windows, window_id)
 	end
