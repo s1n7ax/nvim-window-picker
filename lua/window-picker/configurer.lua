@@ -1,12 +1,8 @@
-local util = require('window-picker.util')
-local dconfig = require('window-picker.config')
-
 ---@class Configurer
 ---@field config any
 local M = {}
 
 function M:new(config)
-	config = config and util.merge_config(dconfig, config) or dconfig
 	config = M._backward_compatibility_config_changes(config)
 	config = M._basic_config_manipulations(config)
 
@@ -15,7 +11,6 @@ function M:new(config)
 	}
 
 	setmetatable(o, self)
-
 	self.__index = self
 
 	return o

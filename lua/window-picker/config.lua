@@ -1,4 +1,9 @@
 local config = {
+	-- type of hints you want to get
+	-- following types are supported
+	-- 'statusline-winbar' | 'statusline' | 'floating-big-letter'
+	hint = 'floating-big-letter',
+
 	-- when you go to window selection mode, status bar will show one of
 	-- following letters on them so you can use that letter to select the window
 	selection_chars = 'FJDKSLA;CMRUEIWOQP',
@@ -20,7 +25,7 @@ local config = {
 			use_winbar = 'never', -- "always" | "never" | "smart"
 		},
 
-		floating_window_picker = {
+		floating_big_letter = {
 			-- window picker plugin provides bunch of big letter fonts
 			-- fonts will be lazy loaded as they are being requested
 			-- additionally, user can pass in a table of fonts in to font

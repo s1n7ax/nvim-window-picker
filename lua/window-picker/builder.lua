@@ -38,9 +38,7 @@ function M:set_filter(filter)
 end
 
 function M:build()
-	local config = vim.tbl_deep_extend('force', dconfig, self.config or {})
-
-	local configurer = self.configurer or dconfigurer:new(config)
+	local configurer = self.configurer or dconfigurer:new(self.config)
 
 	local hint = configurer:config_hint(self.hint or dhint:new())
 	local filter = configurer:config_filter(self.filter or dfilter:new())

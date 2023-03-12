@@ -1,4 +1,3 @@
-local ansi_shadow = require('window-picker.hints.data.ansi-shadow')
 local utf8 = require('window-picker.utf-8')
 
 --- @class FloatingBigLetterHint
@@ -33,7 +32,7 @@ function M:new()
 		windows = {},
 	}
 
-	setmetatable(o, M)
+	setmetatable(o, self)
 	self.__index = self
 
 	return o
@@ -41,13 +40,13 @@ end
 
 function M:set_config(config)
 	self.chars = config.chars
-	local font = config.picker_config.floating_window_picker.font
+	local font = config.picker_config.floating_big_letter.font
 
 	if type(font) == 'string' then
 		self.big_chars = require(('window-picker.hints.data.%s'):format(font))
 	end
 
-	if type(font) ==  'table' then
+	if type(font) == 'table' then
 		self.big_chars = font
 	end
 end
