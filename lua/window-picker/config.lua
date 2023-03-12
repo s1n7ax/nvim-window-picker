@@ -1,8 +1,11 @@
 local config = {
 	-- type of hints you want to get
 	-- following types are supported
-	-- 'statusline-winbar' | 'statusline' | 'floating-big-letter'
-	hint = 'floating-big-letter',
+	-- 'statusline-winbar' | 'floating-big-letter'
+	-- 'statusline-winbar' draw on 'statusline' if possible, if not 'winbar' will be
+	-- 'floating-big-letter' draw big letter on a floating window
+	-- used
+	hint = 'statusline-winbar',
 
 	-- when you go to window selection mode, status bar will show one of
 	-- following letters on them so you can use that letter to select the window
