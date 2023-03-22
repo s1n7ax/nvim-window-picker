@@ -124,13 +124,6 @@ function M.pick_window(custom_config)
     local laststatus = v.o.laststatus
     local cmdheight = v.o.cmdheight
 
-    -- setting highlight groups
-    -- NOTE: somethig clears out the highlights so this needs to be in pick
-    -- window function
-    local hl = vim.api.nvim_set_hl
-    hl(0, 'NvimWindoSwitch', { fg = conf.fg_color, bg = conf.current_win_hl_color, bold = true })
-    hl(0, 'NvimWindoSwitchNC', { fg = conf.fg_color, bg = conf.other_win_hl_color, bold = true })
-
     local selectable = nil
 
     if conf.filter_func then
@@ -238,6 +231,10 @@ function M.setup(custom_config)
     if custom_config then
         config = v.tbl_deep_extend('force', config, custom_config)
     end
+
+    local hl = vim.api.nvim_set_hl
+    hl(0, 'NvimWindoSwitch', { fg = config.fg_color, bg = config.current_win_hl_color, bold = true })
+    hl(0, 'NvimWindoSwitchNC', { fg = config.fg_color, bg = config.other_win_hl_color, bold = true })
 
     M.setup_completed = true
 end
