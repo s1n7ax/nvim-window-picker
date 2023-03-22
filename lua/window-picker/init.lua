@@ -232,9 +232,8 @@ function M.setup(custom_config)
         config = v.tbl_deep_extend('force', config, custom_config)
     end
 
-    local hl = vim.api.nvim_set_hl
-    hl(0, 'NvimWindoSwitch', { fg = config.fg_color, bg = config.current_win_hl_color, bold = true })
-    hl(0, 'NvimWindoSwitchNC', { fg = config.fg_color, bg = config.other_win_hl_color, bold = true })
+    api.nvim_set_hl(0, 'NvimWindoSwitch', { fg = config.fg_color, bg = config.current_win_hl_color, bold = true })
+    api.nvim_set_hl(0, 'NvimWindoSwitchNC', { fg = config.fg_color, bg = config.other_win_hl_color, bold = true })
 
     M.setup_completed = true
 end
