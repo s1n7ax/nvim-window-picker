@@ -83,6 +83,8 @@ function M:draw(windows)
 	vim.cmd.redraw()
 end
 
+function M:clear_prefixes(char) end
+
 --- clear the screen after print
 function M:clear()
 	for window, options in pairs(self.window_options) do

@@ -18,6 +18,7 @@ end
 
 function M._basic_config_manipulations(config)
 	config.chars = M._str_to_char_list(config.selection_chars)
+	config.create_chars = M._str_to_char_list(config.create_chars)
 	return config
 end
 

@@ -3,6 +3,9 @@ local util = require('window-picker.util')
 --- @class DefaultWindowFilter
 --- @field filter_stack function[]
 --- @field window_options table<string, any> window options to filter
+--- @field window_configs table<string, any> window configs to filter
+--- @field window_ids table<string, any> window ids to include
+--- @field not_window_ids table<string, any> window ids to exclude
 --- @field buffer_options table<string, any> buffer options to filter
 --- @field file_name_contains string[] file names to filter
 --- @field file_path_contains string[] file paths to filter
@@ -15,10 +18,13 @@ function M:new()
 	self.__index = self
 
 	o.filter_stack = {
+		o._window_config_filter,
 		o._window_option_filter,
 		o._buffer_options_filter,
 		o._file_path_contains_filter,
 		o._file_path_contains_filter,
+		o._window_id_filter,
+		o._not_window_id_filter,
 		o._current_window_filter,
 	}
 
@@ -28,8 +34,11 @@ end
 function M:set_config(config)
 	self.window_options = config.wo or {}
 	self.buffer_options = config.bo or {}
+	self.window_configs = config.window_configs or {}
 	self.file_name_contains = config.file_name_contains or {}
 	self.file_path_contains = config.file_path_contains or {}
+	self.window_ids = config.window_ids or {}
+	self.not_window_ids = config.not_window_ids or {}
 	self.include_current_win = config.include_current_win
 end
 
@@ -41,6 +50,33 @@ function M:filter_windows(windows)
 	end
 
 	return filtered_windows
+end
+
+function M:_window_config_filter(windows)
+	if self.window_configs and vim.tbl_count(self.window_configs) > 0 then
+		return util.tbl_filter(windows, function(winid)
+			local config = vim.api.nvim_win_get_config(winid)
+			for cfg_key, cfg_values in pairs(self.window_configs) do
+				local actual_opt = config[cfg_key]
+
+				local has_value = false
+
+				if type(cfg_values) == 'table' then
+					has_value = vim.tbl_contains(cfg_values, actual_opt)
+				elseif cfg_values == true then
+					has_value = actual_opt ~= '' and actual_opt ~= nil
+				end
+
+				if has_value then
+					return false
+				end
+			end
+
+			return true
+		end)
+	else
+		return windows
+	end
 end
 
 function M:_window_option_filter(windows)
@@ -61,6 +97,24 @@ function M:_window_option_filter(windows)
 	else
 		return windows
 	end
+end
+
+function M:_window_id_filter(windows)
+	if self.window_ids and vim.tbl_count(self.window_ids) > 0 then
+		windows = util.tbl_filter(windows, function(winid)
+			return vim.tbl_contains(self.window_ids, winid)
+				and not vim.tbl_contains(self.not_window_ids, winid)
+		end)
+	end
+	return windows
+end
+function M:_not_window_id_filter(windows)
+	if self.not_window_ids and vim.tbl_count(self.not_window_ids) > 0 then
+		windows = util.tbl_filter(windows, function(winid)
+			return not vim.tbl_contains(self.not_window_ids, winid)
+		end)
+	end
+	return windows
 end
 
 function M:_buffer_options_filter(windows)

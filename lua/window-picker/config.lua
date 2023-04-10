@@ -9,7 +9,10 @@ local config = {
 
 	-- when you go to window selection mode, status bar will show one of
 	-- following letters on them so you can use that letter to select the window
-	selection_chars = 'FJDKSLA;CMRUEIWOQP',
+	selection_chars = 'FDSACMRUEIWOQP',
+
+	-- when creation mode is enabled, the following will be shown (only in floating window mode for now)
+	create_chars = 'HJKL',
 
 	-- This section contains picker specific configurations
 	picker_config = {
@@ -87,6 +90,11 @@ local config = {
 
 		-- filter using window options
 		wo = {},
+
+		-- filter using window config
+		window_configs = {
+			relative = true, -- checks if this key exists and nonempty (checks for floating windows)
+		},
 
 		-- if the file path contains one of following names, the window
 		-- will be ignored

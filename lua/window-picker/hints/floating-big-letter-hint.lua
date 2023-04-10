@@ -3,6 +3,7 @@ local utf8 = require('window-picker.utf-8')
 --- @class FloatingBigLetterHint
 --- @field win { width: number, height: number } window options
 --- @field windows number[] list of window ids
+--- @field prefix_windows number[][] list of window ids for the prefix characters
 local M = {}
 
 local border = {
@@ -30,6 +31,7 @@ function M:new()
 			height = 8,
 		},
 		windows = {},
+		prefix_windows = { {}, {}, {}, {} },
 	}
 
 	setmetatable(o, self)
@@ -40,6 +42,7 @@ end
 
 function M:set_config(config)
 	self.chars = config.chars
+	self.create_chars = config.create_chars
 	local font = config.picker_config.floating_big_letter.font
 
 	if type(font) == 'string' then
@@ -58,13 +61,25 @@ function M:set_config(config)
 	}, self.window.config)
 end
 
-function M:_get_float_win_pos(window)
+local positioning_params = {
+	m = { 0.5, 0.5, 0.5, 0.5, 'NW' }, -- Middle
+	h = { 0, 0, 0.5, 0.5, 'NW' }, -- Middle-left
+	j = { 0.5, 0.5, 1, 0, 'SW' }, -- Bottom-middle
+	k = { 0.5, 0.5, 0, 0, 'NW' }, -- Top-middle
+	l = { 1, 0, 0.5, 0.5, 'NE' }, -- Middle-right
+}
+local create_win_positions = { 'h', 'j', 'k', 'l' }
+
+function M:_get_float_win_pos(window, position)
+	position = position or 'm'
 	local width = vim.api.nvim_win_get_width(window)
 	local height = vim.api.nvim_win_get_height(window)
+	local params = positioning_params[position]
 
 	local point = {
-		x = ((width - self.win.width) / 2),
-		y = ((height - self.win.height) / 2),
+		x = width * params[1] - self.win.width * params[2],
+		y = height * params[3] - self.win.height * params[4],
+		anchor = params[5],
 	}
 
 	return point
@@ -86,7 +101,7 @@ function M._add_big_char_margin(lines)
 	--bottom padding
 	table.insert(lines, #lines + 1, '')
 
-	--left & right padding
+	--left & right paddin
 
 	for _, line in ipairs(lines) do
 		local new_line = string.format(
@@ -102,8 +117,8 @@ function M._add_big_char_margin(lines)
 	return centered_lines
 end
 
-function M:_show_letter_in_window(window, char)
-	local point = self:_get_float_win_pos(window)
+function M:_show_letter_in_window(window, char, position)
+	local point = self:_get_float_win_pos(window, position)
 
 	local lines = self._add_big_char_margin(vim.split(char, '\n'))
 
@@ -123,6 +138,8 @@ function M:_show_letter_in_window(window, char)
 			col = point.x,
 			width = width,
 			height = height,
+			anchor = point.anchor,
+			focusable = false,
 		})
 	)
 
@@ -138,23 +155,52 @@ function M:_show_letter_in_window(window, char)
 	return window_id
 end
 
-function M:draw(windows)
+function M:draw(windows, or_create)
 	for index, window in ipairs(windows) do
-		local char = self.chars[index]
-		local big_char = self.big_chars[char:lower()]
-		local window_id = self:_show_letter_in_window(window, big_char)
-		table.insert(self.windows, window_id)
+		do
+			local char = self.chars[index]
+			local big_char = self.big_chars[char:lower()]
+			local window_id = self:_show_letter_in_window(window, big_char)
+			table.insert(self.windows, window_id)
+		end
+
+		if or_create then
+			for i = 1, 4 do
+				local char = self.create_chars[i]
+				local big_char = self.big_chars[char:lower()]
+				local dir = create_win_positions[i]
+				local window_id =
+					self:_show_letter_in_window(window, big_char, dir)
+				table.insert(self.prefix_windows[i], window_id)
+			end
+		end
 	end
 end
 
-function M:clear()
-	for _, window in ipairs(self.windows) do
+local function clear_list_of_windows(windows)
+	for _, window in ipairs(windows) do
 		if vim.api.nvim_win_is_valid(window) then
 			local buffer = vim.api.nvim_win_get_buf(window)
 			vim.api.nvim_win_close(window, true)
 			vim.api.nvim_buf_delete(buffer, { force = true })
 		end
 	end
+end
+
+function M:clear_prefixes(index)
+	for prefix, windows in ipairs(self.prefix_windows) do
+		-- Clear all prefixes except the one that was chosen
+		if prefix ~= index then
+			clear_list_of_windows(windows)
+			self.prefix_windows[prefix] = {}
+		end
+	end
+end
+
+function M:clear()
+	clear_list_of_windows(self.windows)
+
+	self:clear_prefixes()
 
 	self.windows = {}
 end

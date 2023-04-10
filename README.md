@@ -43,9 +43,11 @@ use {
 
 ```lua
 local picked_window_id = require('window-picker').pick_window()
+local picked_window_id = require('window-picker').pick_or_create()
 ```
 
-You can put the picked window id to good use
+You can put the picked window id to good use.
+`pick_or_create` will create a new split if you use the prefix keys shown on the edges of windows.
 
 ## Configuration
 
