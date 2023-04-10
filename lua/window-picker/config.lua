@@ -71,6 +71,11 @@ local config = {
 		-- filter using window options
 		wo = {},
 
+		-- filter using window config
+		window_configs = {
+			relative = true, -- checks if this key exists and nonempty (checks for floating windows)
+		},
+
 		-- if the file path contains one of following names, the window
 		-- will be ignored
 		file_path_contains = {},
