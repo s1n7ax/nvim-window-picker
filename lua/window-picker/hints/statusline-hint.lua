@@ -20,7 +20,8 @@ end
 
 function M:set_config(config)
 	self.chars = config.chars
-	self.selection_display = config.picker_config.statusline_winbar_picker.selection_display
+	self.selection_display =
+		config.picker_config.statusline_winbar_picker.selection_display
 
 	vim.api.nvim_set_hl(0, 'WindowPickerStatusLine', {
 		fg = '#ededed',
@@ -69,7 +70,6 @@ function M:draw(windows)
 	for index, window in ipairs(windows) do
 		local char = self.chars[index]
 
-
 		local display_text = self.selection_display
 				and self.selection_display(char, window)
 			or '%=' .. char .. '%='
@@ -82,6 +82,8 @@ function M:draw(windows)
 
 	vim.cmd.redraw()
 end
+
+function M:clear_prefixes(char) end
 
 --- clear the screen after print
 function M:clear()

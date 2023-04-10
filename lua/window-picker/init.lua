@@ -3,6 +3,8 @@ local dconfig = require('window-picker.config')
 
 local M = {}
 
+local default_pick, default_pick_or_create
+
 function M.pick_window(custom_config)
 	local config = dconfig
 
@@ -37,6 +39,15 @@ function M.pick_window(custom_config)
 	end
 
 	return builder:new():set_config(config):set_hint(hint):build():pick_window()
+end
+
+function M.pick_or_create(custom_config)
+	custom_config = custom_config or {}
+	custom_config.or_create = true
+	custom_config.include_current_win = custom_config.include_current_win
+		or true
+
+	return M.pick_window(custom_config)
 end
 
 function M.setup(opts)
