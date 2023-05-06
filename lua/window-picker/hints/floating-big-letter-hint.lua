@@ -24,7 +24,7 @@ local border = {
 	{ '│', 'FloatBorder' },
 }
 
-function M:new()
+function M:new(config)
 	local o = {
 		win = {
 			width = 18,
@@ -35,6 +35,7 @@ function M:new()
 
 	setmetatable(o, M)
 	self.__index = self
+	self.config = config
 
 	return o
 end
@@ -47,7 +48,7 @@ function M:set_config(config)
 		self.big_chars = require(('window-picker.hints.data.%s'):format(font))
 	end
 
-	if type(font) ==  'table' then
+	if type(font) == 'table' then
 		self.big_chars = font
 	end
 end
@@ -123,12 +124,29 @@ function M:_show_letter_in_window(window, char)
 end
 
 function M:draw(windows)
-	for index, window in ipairs(windows) do
-		local char = self.chars[index]
+	local windowlist = {}
+	for _, win in ipairs(windows) do
+		windowlist[win] = false
+	end
+	if self.config.pre_assign_chars then
+		windowlist = self.config.pre_assign_chars(windowlist)
+	end
+
+	local _idx = 1
+	for _win, _char in pairs(windowlist) do
+		local window = _win
+		local char = _char
+		if not char then
+			char = self.chars[_idx]
+			windowlist[_win] = char
+			_idx = _idx + 1
+		end
 		local big_char = self.big_chars[char:lower()]
 		local window_id = self:_show_letter_in_window(window, big_char)
 		table.insert(self.windows, window_id)
 	end
+
+	return windowlist
 end
 
 function M:clear()
