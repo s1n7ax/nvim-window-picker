@@ -39,6 +39,10 @@ function M.pick_window(custom_config)
 	return builder:new():set_config(config):set_hint(hint):build():pick_window()
 end
 
-function M.setup() end
+function M.setup(opts)
+	if opts then
+		dconfig = vim.tbl_deep_extend("force", dconfig, opts)
+	end
+end
 
 return M
