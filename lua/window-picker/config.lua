@@ -17,7 +17,7 @@ local config = {
 			-- You can change the display string in status bar.
 			-- It supports '%' printf style. Such as `return char .. ': %f'` to display
 			-- buffer file path. See :h 'stl' for details.
-			selection_display = function(char, windowid)
+			selection_display = function(char) -- window id also passed in as second argument
 				return '%=' .. char .. '%='
 			end,
 

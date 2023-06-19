@@ -47,9 +47,9 @@ function M.merge_config(current_config, new_config)
 end
 
 function M.is_float(window)
-    local config = v.api.nvim_win_get_config(window)
+	local config = vim.api.nvim_win_get_config(window)
 
-    return config.relative ~= ''
+	return config.relative ~= ''
 end
 
 return M

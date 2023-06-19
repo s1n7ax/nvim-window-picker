@@ -14,10 +14,8 @@ function M.pick_window(custom_config)
 	local hint
 
 	if type(config.hint) == 'string' then
-		local ok, result = pcall(
-			require,
-			('window-picker.hints.%s-hint'):format(config.hint)
-		)
+		local ok, result =
+			pcall(require, ('window-picker.hints.%s-hint'):format(config.hint))
 
 		if not ok then
 			vim.notify(
@@ -41,7 +39,7 @@ end
 
 function M.setup(opts)
 	if opts then
-		dconfig = vim.tbl_deep_extend("force", dconfig, opts)
+		dconfig = vim.tbl_deep_extend('force', dconfig, opts)
 	end
 end
 

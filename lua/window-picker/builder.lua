@@ -1,4 +1,3 @@
-local dconfig = require('window-picker.config')
 local dfilter = require('window-picker.filters.default-window-filter')
 local dpicker = require('window-picker.pickers.window-picker')
 local dhint = require('window-picker.hints.statusline-winbar-hint')
