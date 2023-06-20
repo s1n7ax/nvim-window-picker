@@ -34,7 +34,7 @@ local run_action = function()
 end
 
 -- unload and run the function from the package
-function Reload_and_run()
+function _G.Reload_and_run()
 	unload_packages()
 	run_action()
 end

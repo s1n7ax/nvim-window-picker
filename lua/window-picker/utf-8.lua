@@ -1082,53 +1082,21 @@ end
 
 local M = {}
 
-function M.len(s)
-	return utf8len(s)
-end
-function M.sub(s, i, j)
-	return utf8sub(s, i, j)
-end
-function M.reverse(s)
-	return utf8reverse(s)
-end
-function M.char(unicode)
-	return utf8char(unicode)
-end
-function M.unicode(s, i, j)
-	return utf8unicode(s, i, j)
-end
-function M.gensub(s, sub_len)
-	return utf8gensub(s, sub_len)
-end
-function M.byte(s, i, j)
-	return utf8unicode(s, i, j)
-end
-function M.find(str, regex, init, plain)
-	return utf8find(str, regex, init, plain)
-end
-function M.match(str, regex, init)
-	return utf8match(str, regex, init)
-end
-function M.gmatch(str, regex, all)
-	return utf8gmatch(str, regex, all)
-end
-function M.gsub(str, regex, repl, limit)
-	return utf8gsub(str, regex, repl, limit)
-end
-function M.dump(s)
-	return dump(s)
-end
-function M.format(s)
-	return format(s)
-end
-function M.lower(s)
-	return lower(s)
-end
-function M.upper(s)
-	return upper(s)
-end
-function M.rep()
-	return rep(s)
-end
+M.len = utf8len
+M.sub = utf8sub
+M.reverse = utf8reverse
+M.char = utf8char
+M.unicode = utf8unicode
+M.gensub = utf8gensub
+M.byte = utf8unicode
+M.find = utf8find
+M.match = utf8match
+M.gmatch = utf8gmatch
+M.gsub = utf8gsub
+M.dump = dump
+M.format = format
+M.lower = lower
+M.upper = upper
+M.rep = rep
 
 return M
