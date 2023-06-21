@@ -2,7 +2,12 @@
 
 `hint = 'floating-big-letter'`
 
+https://github.com/s1n7ax/nvim-window-picker/assets/18459807/5b228880-aa17-49d9-905c-1d408d64be42
+
 `hint = 'statusline-winbar'`
+
+https://github.com/s1n7ax/nvim-window-picker/assets/18459807/9acaefd2-4342-4d81-b087-cd4afb4f92f2
+
 
 This plugins prompts the user to pick a window and returns the window id of the
 picked window.
