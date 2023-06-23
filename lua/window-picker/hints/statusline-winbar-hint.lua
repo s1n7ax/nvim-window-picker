@@ -1,3 +1,10 @@
+local HL = {
+	st_hi = 'WindowPickerStatusLine',
+	st_hi_nc = 'WindowPickerStatusLineNC',
+	wb_hi = 'WindowPickerWinBar',
+	wb_hi_nc = 'WindowPickerWinBarNC',
+}
+
 local StatuslineHint = require('window-picker.hints.statusline-hint')
 
 ---@class StatuslineWinbarHint
@@ -14,38 +21,20 @@ function M:set_config(config)
 	self.selection_display =
 		config.picker_config.statusline_winbar_picker.selection_display
 	self.use_winbar = config.picker_config.statusline_winbar_picker.use_winbar
+	self.hl_namespace = vim.api.nvim_create_namespace('')
+	self.should_set_hl_ns = false
 
 	-- registering highlights
-	if type(config.highlights.statusline.focused) == 'table' then
-		self.st_hi = 'WindowPickerStatusLine'
-		vim.api.nvim_set_hl(0, self.st_hi, config.highlights.statusline.focused)
-	end
+	self:create_hl(HL.st_hi, config.highlights.statusline.focused)
+	self:create_hl(HL.st_hi_nc, config.highlights.statusline.unfocused)
+	self:create_hl(HL.wb_hi, config.highlights.winbar.focused)
+	self:create_hl(HL.wb_hi_nc, config.highlights.winbar.unfocused)
+end
 
-	if type(config.highlights.statusline.unfocused) == 'table' then
-		self.st_hi_nc = 'WindowPickerStatusLineNC'
-		vim.api.nvim_set_hl(
-			0,
-			self.st_hi_nc,
-			config.highlights.statusline.unfocused
-		)
-	end
-
-	if type(config.highlights.winbar.focused) == 'table' then
-		self.wb_hi = 'WindowPickerWinBar'
-		vim.api.nvim_set_hl(
-			0,
-			self.wb_hi,
-			config.highlights.statusline.unfocused
-		)
-	end
-
-	if type(config.highlights.winbar.unfocused) == 'table' then
-		self.wb_hi_nc = 'WindowPickerWinBarNC'
-		vim.api.nvim_set_hl(
-			0,
-			self.wb_hi_nc,
-			config.highlights.statusline.unfocused
-		)
+function M:create_hl(name, properties)
+	if type(properties) == 'table' then
+		self.should_set_hl_ns = true
+		vim.api.nvim_set_hl(self.hl_namespace, name, properties)
 	end
 end
 
@@ -90,9 +79,9 @@ function M:draw(windows)
 		local winhl = string.format(
 			'%s:%s,%sNC:%s',
 			indicator_hl,
-			use_winbar and self.wb_hi or self.st_hi,
+			use_winbar and HL.wb_hi or HL.st_hi,
 			indicator_hl,
-			use_winbar and self.wb_hi_nc or self.wb_hi
+			use_winbar and HL.wb_hi_nc or HL.st_hi_nc
 		)
 
 		local ok, result = pcall(
@@ -121,9 +110,37 @@ function M:draw(windows)
 
 		--  pcall(vim.api.nvim_win_set_option, window, 'winhl', winhl)
 		vim.wo[window]['winhl'] = winhl
+
+		-- setting the highlight namespace
+
+		if self.should_set_hl_ns then
+			print('setting namespace', window, self.hl_namespace)
+			vim.api.nvim_win_set_hl_ns(window, self.hl_namespace)
+		end
 	end
 
 	vim.cmd.redraw()
+end
+
+--- clear the screen after print
+function M:clear()
+	-- clear window changes
+	for window, options in pairs(self.window_options) do
+		for opt_key, opt_value in pairs(options) do
+			pcall(vim.api.nvim_win_set_option, window, opt_key, opt_value)
+		end
+
+		-- removing the namespaces
+		vim.api.nvim_win_set_hl_ns(window, 0)
+	end
+
+	-- clear global changes
+	for key, value in pairs(self.global_options) do
+		vim.o[key] = value
+	end
+
+	self.window_options = {}
+	self.global_options = {}
 end
 
 return M

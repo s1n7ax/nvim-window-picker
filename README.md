@@ -181,6 +181,16 @@ require('window-picker').pick_window({
 })
 ```
 
+## Theming
+
+If you just want to define the colors using Neovim Highlights, then it's totally
+possible. You can set following highlights manually.
+
+- `WindowPickerStatusLine` (currently focused window statusline highlights)
+- `WindowPickerStatusLineNC` (currently unfocused window statusline highlights)
+- `WindowPickerWinBar` (currently focused window winbar highlights)
+- `WindowPickerWinBarNC` (currently unfocused window winbar highlights)
+
 ## Breaking changes in v2.0.0
 
 _Before_: return value from `selection_display` will be wrapped by `'%='` and
