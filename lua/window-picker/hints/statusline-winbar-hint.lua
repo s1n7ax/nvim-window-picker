@@ -35,7 +35,7 @@ function M:set_config(config)
 		vim.api.nvim_set_hl(
 			0,
 			self.wb_hi,
-			config.highlights.statusline.unfocused
+			config.highlights.statusline.focused
 		)
 	end
 
