@@ -32,11 +32,7 @@ function M:set_config(config)
 
 	if type(config.highlights.winbar.focused) == 'table' then
 		self.wb_hi = 'WindowPickerWinBar'
-		vim.api.nvim_set_hl(
-			0,
-			self.wb_hi,
-			config.highlights.statusline.focused
-		)
+		vim.api.nvim_set_hl(0, self.wb_hi, config.highlights.statusline.focused)
 	end
 
 	if type(config.highlights.winbar.unfocused) == 'table' then
