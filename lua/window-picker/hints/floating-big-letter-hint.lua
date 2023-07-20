@@ -49,6 +49,13 @@ function M:set_config(config)
 	if type(font) == 'table' then
 		self.big_chars = font
 	end
+
+	self.window = config.picker_config.floating_big_letter.window
+	self.window_config = vim.tbl_deep_extend('force', {
+		-- these options are safe to change
+		focusable = true,
+		border = border,
+	}, self.window.config)
 end
 
 function M:_get_float_win_pos(window)
@@ -104,17 +111,27 @@ function M:_show_letter_in_window(window, char)
 	local height = #lines
 
 	local buffer_id = vim.api.nvim_create_buf(false, true)
-	local window_id = vim.api.nvim_open_win(buffer_id, false, {
-		relative = 'win',
-		win = window,
-		focusable = true,
-		row = point.y,
-		col = point.x,
-		width = width,
-		height = height,
-		style = 'minimal',
-		border = border,
-	})
+	local window_id = vim.api.nvim_open_win(
+		buffer_id,
+		false,
+		vim.tbl_deep_extend('force', self.window.config, {
+			-- these options must not be overridden
+			style = 'minimal',
+			relative = 'win',
+			win = window,
+			row = point.y,
+			col = point.x,
+			width = width,
+			height = height,
+		})
+	)
+
+	for opt, val in pairs(self.window.options) do
+		vim.api.nvim_set_option_value(opt, val, {
+			scope = 'local',
+			win = window_id,
+		})
+	end
 
 	vim.api.nvim_buf_set_lines(buffer_id, 0, 0, true, lines)
 

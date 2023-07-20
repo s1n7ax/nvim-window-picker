@@ -35,6 +35,15 @@ local config = {
 			-- property to use instead
 
 			font = 'ansi-shadow', -- ansi-shadow |
+
+			window = {
+				-- These properties will be added to the floating windows' config
+				-- see :h nvim-open-win
+				config = {},
+				-- These window options will be set for the floating windows
+				-- see :h vim.wo
+				options = {},
+			},
 		},
 	},
 
