@@ -55,25 +55,38 @@ end
 local getwin = vim.api.nvim_get_current_win
 -- split from winid using spl() and return either the new or existing window
 -- make sure cursor stays in curwin
-local make_split = function(winid, split, new)
+---@param winid window
+---@param key "h" | "j" | "k" | "k" Direction key to split the window in
+local make_split = function(winid, key)
+	local opposite = dir == 'k' or dir == 'h'
+	local dir = (key == 'k' or key == 'j') and 'below' or 'right'
+	local opt = 'split' .. dir
 	local id = vim.api.nvim_win_call(winid, function()
-		split()
-		return new and getwin() or winid
+		local current = vim.o[opt]
+		vim.o[opt] = not opposite
+		if dir == 'right' then
+			vim.cmd.vsplit()
+		else
+			vim.cmd.split()
+		end
+		vim.o[opt] = current
+		return getwin()
 	end)
 	return id
 end
+
 M.create_actions = {
 	function(winid) -- h
-		return make_split(winid, vim.cmd.vsplit, false)
+		return make_split(winid, 'h')
 	end,
 	function(winid) -- j
-		return make_split(winid, vim.cmd.split, true)
+		return make_split(winid, 'j')
 	end,
 	function(winid) -- k
-		return make_split(winid, vim.cmd.split, false)
+		return make_split(winid, 'k')
 	end,
 	function(winid) -- l
-		return make_split(winid, vim.cmd.vsplit, true)
+		return make_split(winid, 'l')
 	end,
 }
 
