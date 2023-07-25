@@ -156,8 +156,11 @@ function M:_show_letter_in_window(window, char, position)
 end
 
 function M:draw(windows, or_create)
+	local include_curwin =
+		require('window-picker.config').filter_rules.include_current_win
+	local curwin = vim.api.nvim_get_current_win()
 	for index, window in ipairs(windows) do
-		do
+		if include_curwin or (window ~= curwin) then
 			local char = self.chars[index]
 			local big_char = self.big_chars[char:lower()]
 			local window_id = self:_show_letter_in_window(window, big_char)
