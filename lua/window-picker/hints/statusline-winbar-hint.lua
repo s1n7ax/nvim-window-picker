@@ -32,7 +32,7 @@ function M:set_config(config)
 
 	if type(config.highlights.winbar.focused) == 'table' then
 		self.wb_hi = 'WindowPickerWinBar'
-		vim.api.nvim_set_hl(0, self.wb_hi, config.highlights.statusline.focused)
+		vim.api.nvim_set_hl(0, self.wb_hi, config.highlights.winbar.focused)
 	end
 
 	if type(config.highlights.winbar.unfocused) == 'table' then
@@ -40,7 +40,7 @@ function M:set_config(config)
 		vim.api.nvim_set_hl(
 			0,
 			self.wb_hi_nc,
-			config.highlights.statusline.unfocused
+			config.highlights.winbar.unfocused
 		)
 	end
 end
@@ -88,7 +88,7 @@ function M:draw(windows)
 			indicator_hl,
 			use_winbar and self.wb_hi or self.st_hi,
 			indicator_hl,
-			use_winbar and self.wb_hi_nc or self.wb_hi
+			use_winbar and self.wb_hi_nc or self.st_hi_nc
 		)
 
 		local ok, result = pcall(
