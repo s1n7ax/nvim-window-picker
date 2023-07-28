@@ -54,7 +54,7 @@ function M:set_config(config)
 	self:set_plugin_hl()
 end
 
-function M:create_hl(namespace, name, properties)
+function M.create_hl(namespace, name, properties)
 	if type(properties) == 'table' then
 		vim.api.nvim_set_hl(namespace, name, properties)
 	end
@@ -64,7 +64,7 @@ end
 --- @param windows number[] windows to draw the hints on
 ---@diagnostic disable-next-line: duplicate-set-field
 function M:draw(windows)
-	local hint_type, hint_dhl = unpack(self:get_hint_type())
+	local hint_type = unpack(self:get_hint_type())
 
 	local g_opts_to_cap = self.opt_cap[hint_type].g
 	local w_opts_to_cap = self.opt_cap[hint_type].w
@@ -178,20 +178,20 @@ function M:get_hint_type()
 end
 
 function M:set_plugin_hl()
-	self:create_hl(
+	M.create_hl(
 		self.statusline_hl_ns,
 		HL.st_hi,
 		self.highlights.statusline.focused
 	)
-	self:create_hl(
+	M.create_hl(
 		self.statusline_hl_ns,
 		HL.st_hi_nc,
 		self.highlights.statusline.unfocused
 	)
 
-	self:create_hl(self.winbar_hl_ns, HL.wb_hi, self.highlights.winbar.focused)
+	M.create_hl(self.winbar_hl_ns, HL.wb_hi, self.highlights.winbar.focused)
 
-	self:create_hl(
+	M.create_hl(
 		self.winbar_hl_ns,
 		HL.wb_hi_nc,
 		self.highlights.winbar.unfocused
@@ -200,21 +200,21 @@ end
 
 function M:set_temp_hint_hl(hint_type)
 	if hint_type == 'statusline' then
-		local st_hl = self:get_hl(self.statusline_hl_ns, HL.st_hi)
-		local st_hl_nc = self:get_hl(self.statusline_hl_ns, HL.st_hi_nc)
+		local st_hl = M.get_hl(self.statusline_hl_ns, HL.st_hi)
+		local st_hl_nc = M.get_hl(self.statusline_hl_ns, HL.st_hi_nc)
 
 		vim.api.nvim_set_hl(self.statusline_hl_ns, 'StatusLine', st_hl)
 		vim.api.nvim_set_hl(self.statusline_hl_ns, 'StatusLineNC', st_hl_nc)
 	else
-		local wb_hl = self:get_hl(self.winbar_hl_ns, HL.wb_hi)
-		local wb_hl_nc = self:get_hl(self.winbar_hl_ns, HL.wb_hi_nc)
+		local wb_hl = M.get_hl(self.winbar_hl_ns, HL.wb_hi)
+		local wb_hl_nc = M.get_hl(self.winbar_hl_ns, HL.wb_hi_nc)
 
 		vim.api.nvim_set_hl(self.winbar_hl_ns, 'WinBar', wb_hl)
 		vim.api.nvim_set_hl(self.winbar_hl_ns, 'WinBarNC', wb_hl_nc)
 	end
 end
 
-function M:get_hl(namespace, name)
+function M.get_hl(namespace, name)
 	local hl = vim.api.nvim_get_hl(namespace, {
 		name = name,
 	})
