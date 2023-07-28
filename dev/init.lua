@@ -33,41 +33,66 @@ local run_action = function()
 				use_winbar = 'always', -- "always" | "never" | "smart"
 			},
 		},
-	})
-
-	local window = require(package_name).pick_window({
 		highlights = {
-			enabled = true,
 			statusline = {
 				focused = {
-					fg = '#fcf803',
-					bg = '#0341fc',
+					fg = 'yellow',
+					bg = 'yellow',
 					bold = true,
 				},
 				unfocused = {
-					fg = '#fcf803',
-					bg = '#fcf803',
+					fg = 'yellow',
+					bg = 'yellow',
 					bold = true,
 				},
 			},
 			winbar = {
 				focused = {
-					fg = '#fcf803',
-					bg = '#fcf803',
+					fg = 'red',
+					bg = 'blue',
 					bold = true,
 				},
 				unfocused = {
-					fg = '#fcf803',
-					bg = '#fcf803',
+					fg = 'green',
+					bg = 'black',
 					bold = true,
 				},
 			},
 		},
 	})
 
-	vim.print('>>>', window)
+	local window = require(package_name).pick_window({
+		-- highlights = {
+		-- 	enabled = false,
+		-- 	statusline = {
+		-- 		focused = {
+		-- 			fg = 'blue',
+		-- 			bg = 'red',
+		-- 			bold = true,
+		-- 		},
+		-- 		unfocused = {
+		-- 			fg = 'black',
+		-- 			bg = 'white',
+		-- 			bold = true,
+		-- 		},
+		-- 	},
+		-- 	winbar = {
+		-- 		focused = {
+		-- 			fg = 'red',
+		-- 			bg = 'blue',
+		-- 			bold = true,
+		-- 		},
+		-- 		unfocused = {
+		-- 			fg = 'green',
+		-- 			bg = 'black',
+		-- 			bold = true,
+		-- 		},
+		-- 	},
+		-- },
+	})
 
 	if not window then
+		print('result is nil')
 		return
 	end
 

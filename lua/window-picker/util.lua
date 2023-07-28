@@ -27,10 +27,16 @@ function M.map_find(tbl, match_func)
 end
 
 function M.get_user_input_char()
-	local c = vim.fn.getchar()
+	local ok, c = pcall(vim.fn.getchar)
+
+	if not ok then
+		return
+	end
+
 	while type(c) ~= 'number' do
 		c = vim.fn.getchar()
 	end
+
 	return vim.fn.nr2char(c)
 end
 

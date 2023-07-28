@@ -8,12 +8,9 @@ local HL = {
 local StatuslineHint = require('window-picker.hints.statusline-hint')
 
 ---@class StatuslineWinbarHint
----@field window_options table<string, any> window options
----@field global_options table<string, any> global options
----@field chars string[] list of chars to hint
----@field selection_display function function to customize the hint
 local M = StatuslineHint:new()
 
+---@diagnostic disable-next-line: duplicate-set-field
 function M:set_config(config)
 	self.chars = config.chars
 	self.show_prompt = config.show_prompt
@@ -21,80 +18,76 @@ function M:set_config(config)
 	self.selection_display =
 		config.picker_config.statusline_winbar_picker.selection_display
 	self.use_winbar = config.picker_config.statusline_winbar_picker.use_winbar
-	self.hl_namespace = vim.api.nvim_create_namespace('')
-	self.should_set_hl_ns = false
 
-	-- registering highlights
-	self:create_hl(HL.st_hi, config.highlights.statusline.focused)
-	self:create_hl(HL.st_hi_nc, config.highlights.statusline.unfocused)
-	self:create_hl(HL.wb_hi, config.highlights.winbar.focused)
-	self:create_hl(HL.wb_hi_nc, config.highlights.winbar.unfocused)
+	self.highlights = config.highlights
+
+	self.opt_cap = {
+		statusline = {
+			g = {
+				{
+					name = 'laststatus',
+					value = 2,
+				},
+				{
+					name = 'cmdheight',
+					value = 1,
+				},
+			},
+			w = { { name = 'statusline' } },
+		},
+		winbar = {
+			g = {},
+			w = { { name = 'winbar' } },
+		},
+	}
+
+	self.opt_save = {
+		g = {},
+		w = {},
+	}
+
+	self.hl_ns_save = {}
+
+	self.statusline_hl_ns = vim.api.nvim_create_namespace('')
+	self.winbar_hl_ns = vim.api.nvim_create_namespace('')
+
+	self:set_plugin_hl()
 end
 
-function M:create_hl(name, properties)
+function M:create_hl(namespace, name, properties)
 	if type(properties) == 'table' then
-		self.should_set_hl_ns = true
-		vim.api.nvim_set_hl(self.hl_namespace, name, properties)
+		vim.api.nvim_set_hl(namespace, name, properties)
 	end
 end
 
 --- Shows the characters in status line
 --- @param windows number[] windows to draw the hints on
+---@diagnostic disable-next-line: duplicate-set-field
 function M:draw(windows)
-	local use_winbar = false
+	local hint_type, hint_dhl = unpack(self:get_hint_type())
 
-	-- calculate if we should use winbar or not
-	if self.use_winbar == 'always' then
-		use_winbar = true
-	elseif self.use_winbar == 'never' then
-		use_winbar = false
-	elseif self.use_winbar == 'smart' then
-		use_winbar = vim.o.cmdheight == 0
-	end
+	local g_opts_to_cap = self.opt_cap[hint_type].g
+	local w_opts_to_cap = self.opt_cap[hint_type].w
 
-	local indicator_setting = use_winbar and 'winbar' or 'statusline'
-	local indicator_hl = use_winbar and 'WinBar' or 'StatusLine'
-
-	if not use_winbar then
-		if vim.o.laststatus ~= 2 then
-			self.global_options['laststatus'] = vim.o['laststatus']
-			vim.o.laststatus = 2
-		end
-
-		if self.show_prompt and vim.o.cmdheight < 1 then
-			self.global_options['cmdheight'] = vim.o['cmdheight']
-			vim.o.cmdheight = 1
-		end
-	end
-
-	local win_opt_to_cap = { indicator_setting, 'winhl' }
-	self:save_window_options(windows, win_opt_to_cap)
+	self:set_global_opts(g_opts_to_cap)
+	self:set_temp_hint_hl(hint_type)
 
 	for index, window in ipairs(windows) do
+		self:set_win_opts(window, w_opts_to_cap)
+		self:set_win_hl(window, hint_type)
+
 		local char = self.chars[index]
 		local display_text = self.selection_display
 				and self.selection_display(char, window)
 			or '%=' .. char .. '%='
 
-		local winhl = string.format(
-			'%s:%s,%sNC:%s',
-			indicator_hl,
-			use_winbar and HL.wb_hi or HL.st_hi,
-			indicator_hl,
-			use_winbar and HL.wb_hi_nc or HL.st_hi_nc
-		)
-
-		local ok, result = pcall(
-			vim.api.nvim_win_set_option,
-			window,
-			indicator_setting,
-			display_text
-		)
+		local ok, result =
+			pcall(vim.api.nvim_win_set_option, window, hint_type, display_text)
 
 		if not ok then
 			local buffer = vim.api.nvim_win_get_buf(window)
 			local message = 'Unable to set '
-				.. indicator_setting
+				.. hint_type
 				.. ' for window id::'
 				.. window
 				.. '\n'
@@ -107,16 +100,6 @@ function M:draw(windows)
 
 			vim.notify(message, vim.log.levels.WARN)
 		end
-
-		--  pcall(vim.api.nvim_win_set_option, window, 'winhl', winhl)
-		vim.wo[window]['winhl'] = winhl
-
-		-- setting the highlight namespace
-
-		if self.should_set_hl_ns then
-			print('setting namespace', window, self.hl_namespace)
-			vim.api.nvim_win_set_hl_ns(window, self.hl_namespace)
-		end
 	end
 
 	vim.cmd.redraw()
@@ -124,23 +107,141 @@ end
 
 --- clear the screen after print
 function M:clear()
-	-- clear window changes
-	for window, options in pairs(self.window_options) do
-		for opt_key, opt_value in pairs(options) do
-			pcall(vim.api.nvim_win_set_option, window, opt_key, opt_value)
-		end
+	self:restore_global_opts()
+	self:restore_win_opts()
+	self:restore_win_hl()
+end
 
-		-- removing the namespaces
+function M:set_global_opts(opts)
+	for _, opt in ipairs(opts) do
+		local curr = vim.o[opt.name]
+		vim.o[opt.name] = opt.value
+
+		table.insert(self.opt_save.g, {
+			name = opt.name,
+			value = curr,
+		})
+	end
+end
+
+function M:set_win_opts(window, opts)
+	for _, opt in ipairs(opts) do
+		table.insert(self.opt_save.w, {
+			window = window,
+			name = opt.name,
+			value = vim.wo[window][opt.name],
+		})
+
+		if opt.value then
+			vim.wo[window][opt.name] = opt.value
+		end
+	end
+end
+
+function M:restore_global_opts()
+	for index, opt in ipairs(self.opt_save.g) do
+		vim.o[opt.name] = opt.value
+		self.opt_save.g[index] = nil
+	end
+end
+
+function M:restore_win_opts()
+	for index, opt in ipairs(self.opt_save.w) do
+		vim.wo[opt.window][opt.name] = opt.value
+		self.opt_save.w[index] = nil
+	end
+end
+
+function M:get_hint_type()
+	local use_winbar = false
+
+	-- calculate if we should use winbar or not
+	if self.use_winbar == 'always' then
+		use_winbar = true
+	elseif self.use_winbar == 'never' then
+		use_winbar = false
+	elseif self.use_winbar == 'smart' then
+		use_winbar = vim.o.cmdheight == 0
+	end
+
+	if use_winbar then
+		return {
+			'winbar',
+			'WinBar',
+		}
+	end
+
+	return {
+		'statusline',
+		'StatusLine',
+	}
+end
+
+function M:set_plugin_hl()
+	self:create_hl(
+		self.statusline_hl_ns,
+		HL.st_hi,
+		self.highlights.statusline.focused
+	)
+	self:create_hl(
+		self.statusline_hl_ns,
+		HL.st_hi_nc,
+		self.highlights.statusline.unfocused
+	)
+
+	self:create_hl(self.winbar_hl_ns, HL.wb_hi, self.highlights.winbar.focused)
+
+	self:create_hl(
+		self.winbar_hl_ns,
+		HL.wb_hi_nc,
+		self.highlights.winbar.unfocused
+	)
+end
+
+function M:set_temp_hint_hl(hint_type)
+	if hint_type == 'statusline' then
+		local st_hl = self:get_hl(self.statusline_hl_ns, HL.st_hi)
+		local st_hl_nc = self:get_hl(self.statusline_hl_ns, HL.st_hi_nc)
+
+		vim.api.nvim_set_hl(self.statusline_hl_ns, 'StatusLine', st_hl)
+		vim.api.nvim_set_hl(self.statusline_hl_ns, 'StatusLineNC', st_hl_nc)
+	else
+		local wb_hl = self:get_hl(self.winbar_hl_ns, HL.wb_hi)
+		local wb_hl_nc = self:get_hl(self.winbar_hl_ns, HL.wb_hi_nc)
+
+		vim.api.nvim_set_hl(self.winbar_hl_ns, 'WinBar', wb_hl)
+		vim.api.nvim_set_hl(self.winbar_hl_ns, 'WinBarNC', wb_hl_nc)
+	end
+end
+
+function M:get_hl(namespace, name)
+	local hl = vim.api.nvim_get_hl(namespace, {
+		name = name,
+	})
+
+	if not vim.tbl_isempty(hl) then
+		return hl
+	end
+
+	return vim.api.nvim_get_hl(0, {
+		name = name,
+	})
+end
+
+function M:set_win_hl(window, hint_type)
+	if hint_type == 'statusline' then
+		vim.api.nvim_win_set_hl_ns(window, self.statusline_hl_ns)
+	else
+		vim.api.nvim_win_set_hl_ns(window, self.winbar_hl_ns)
+	end
+
+	table.insert(self.hl_ns_save, window)
+end
+
+function M:restore_win_hl()
+	for _, window in ipairs(self.hl_ns_save) do
 		vim.api.nvim_win_set_hl_ns(window, 0)
 	end
-
-	-- clear global changes
-	for key, value in pairs(self.global_options) do
-		vim.o[key] = value
-	end
-
-	self.window_options = {}
-	self.global_options = {}
 end
 
 return M
