@@ -10,7 +10,6 @@ local StatuslineHint = require('window-picker.hints.statusline-hint')
 ---@class StatuslineWinbarHint
 local M = StatuslineHint:new()
 
----@diagnostic disable-next-line: duplicate-set-field
 function M:set_config(config)
 	self.chars = config.chars
 	self.show_prompt = config.show_prompt
@@ -62,7 +61,6 @@ end
 
 --- Shows the characters in status line
 --- @param windows number[] windows to draw the hints on
----@diagnostic disable-next-line: duplicate-set-field
 function M:draw(windows)
 	local hint_type = unpack(self:get_hint_type())
 
