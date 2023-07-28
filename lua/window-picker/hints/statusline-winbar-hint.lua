@@ -62,7 +62,7 @@ end
 --- Shows the characters in status line
 --- @param windows number[] windows to draw the hints on
 function M:draw(windows)
-	local hint_type = unpack(self:get_hint_type())
+	local hint_type = self:get_hint_type()
 
 	local g_opts_to_cap = self.opt_cap[hint_type].g
 	local w_opts_to_cap = self.opt_cap[hint_type].w
@@ -163,16 +163,10 @@ function M:get_hint_type()
 	end
 
 	if use_winbar then
-		return {
-			'winbar',
-			'WinBar',
-		}
+		return 'winbar'
 	end
 
-	return {
-		'statusline',
-		'StatusLine',
-	}
+	return 'statusline'
 end
 
 function M:set_plugin_hl()
