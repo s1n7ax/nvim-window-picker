@@ -1,3 +1,6 @@
+local cwd = vim.fn.getcwd()
+vim.opt.runtimepath:prepend(cwd)
+
 --[[
 -- plugin name will be used to reload the loaded modules
 --]]
@@ -21,12 +24,75 @@ end
 
 -- executes the run method in the package
 local run_action = function()
-	require(package_name).setup()
-	local window = require(package_name).pick_window()
+	vim.cmd.messages('clear')
 
-	vim.pretty_print('>>>', window)
+	require(package_name).setup({
+		include_current_win = true,
+		picker_config = {
+			statusline_winbar_picker = {
+				use_winbar = 'always', -- "always" | "never" | "smart"
+			},
+		},
+		highlights = {
+			statusline = {
+				focused = {
+					fg = 'yellow',
+					bg = 'yellow',
+					bold = true,
+				},
+				unfocused = {
+					fg = 'yellow',
+					bg = 'yellow',
+					bold = true,
+				},
+			},
+			winbar = {
+				focused = {
+					fg = 'red',
+					bg = 'blue',
+					bold = true,
+				},
+				unfocused = {
+					fg = 'green',
+					bg = 'black',
+					bold = true,
+				},
+			},
+		},
+	})
+
+	local window = require(package_name).pick_window({
+		-- highlights = {
+		-- 	enabled = false,
+		-- 	statusline = {
+		-- 		focused = {
+		-- 			fg = 'blue',
+		-- 			bg = 'red',
+		-- 			bold = true,
+		-- 		},
+		-- 		unfocused = {
+		-- 			fg = 'black',
+		-- 			bg = 'white',
+		-- 			bold = true,
+		-- 		},
+		-- 	},
+		-- 	winbar = {
+		-- 		focused = {
+		-- 			fg = 'red',
+		-- 			bg = 'blue',
+		-- 			bold = true,
+		-- 		},
+		-- 		unfocused = {
+		-- 			fg = 'green',
+		-- 			bg = 'black',
+		-- 			bold = true,
+		-- 		},
+		-- 	},
+		-- },
+	})
 
 	if not window then
+		print('result is nil')
 		return
 	end
 

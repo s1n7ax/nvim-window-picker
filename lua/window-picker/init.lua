@@ -41,6 +41,71 @@ function M.setup(opts)
 	if opts then
 		dconfig = vim.tbl_deep_extend('force', dconfig, opts)
 	end
+
+	-- Setting highlights at global level
+	-- highlight config is deleted so hint classes will only receive the
+	-- highlights from config passed to pick_window() function explicitly
+	--
+	-- Behaviour:
+	-- WHEN user wants nether global nor default config, highlights can be
+	-- disabled
+	--
+	-- WHEN global highlights are already set,
+	--	IF pick_window() has no highlight config
+	--		EXPECTED to use global highlights
+	--	IF pick_window({highlights}) has highlight config
+	--		EXPECTED to override only the passed highlights ONLY
+	--
+	-- WHEN global highlights are NOT set
+	--	IF pick_window() has no highlight config
+	--		EXPECTED to use default config highlights
+	--	IF pick_window({highlights}) has highlight config
+	--		EXPECTED to override only the passed highlights ONLY
+
+	if not dconfig.highlights.enabled then
+		return
+	end
+
+	M._create_hl_if_not_exists(
+		'WindowPickerStatusLine',
+		dconfig.highlights.statusline.focused
+	)
+
+	M._create_hl_if_not_exists(
+		'WindowPickerStatusLineNC',
+		dconfig.highlights.statusline.unfocused
+	)
+
+	M._create_hl_if_not_exists(
+		'WindowPickerWinBar',
+		dconfig.highlights.winbar.focused
+	)
+
+	M._create_hl_if_not_exists(
+		'WindowPickerWinBarNC',
+		dconfig.highlights.winbar.unfocused
+	)
+
+	dconfig.highlights = {
+		statusline = {},
+		winbar = {},
+	}
+end
+
+function M._create_hl_if_not_exists(name, properties)
+	if type(properties) ~= 'table' then
+		return
+	end
+
+	local hl = vim.api.nvim_get_hl(0, {
+		name = name,
+	})
+
+	if not vim.tbl_isempty(hl) then
+		return
+	end
+
+	vim.api.nvim_set_hl(0, name, properties)
 end
 
 return M
