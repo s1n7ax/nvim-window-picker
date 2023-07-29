@@ -1,11 +1,11 @@
 # Changelog
 
-## [2.0.1](https://github.com/s1n7ax/nvim-window-picker/compare/v2.0.0...v2.0.1) (2023-07-04)
+## [2.0.2](https://github.com/s1n7ax/nvim-window-picker/compare/v2.0.1...v2.0.2) (2023-07-29)
 
 
 ### Bug Fixes
 
-* typo in nvim_set_hl ([#48](https://github.com/s1n7ax/nvim-window-picker/issues/48)) ([90fcbf9](https://github.com/s1n7ax/nvim-window-picker/commit/90fcbf9debd2a75977e3ac75942a90534a34eb86))
+* respect global highlighting
 
 ## 2.0.0 (2023-06-21)
 
