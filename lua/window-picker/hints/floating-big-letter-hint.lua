@@ -100,7 +100,10 @@ function M:_show_letter_in_window(window, char)
 
 	local lines = self._add_big_char_margin(vim.split(char, '\n'))
 
-	local width = utf8.len(lines[2])
+	local width = 0
+	for _, line in ipairs(lines) do
+		width = math.max(width, utf8.len(line))
+	end
 	local height = #lines
 
 	local buffer_id = vim.api.nvim_create_buf(false, true)
