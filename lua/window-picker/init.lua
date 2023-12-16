@@ -87,8 +87,14 @@ function M.setup(opts)
 	)
 
 	dconfig.highlights = {
-		statusline = {},
-		winbar = {},
+		statusline = {
+			focused = {},
+			unfocused = {},
+		},
+		winbar = {
+			focused = {},
+			unfocused = {},
+		},
 	}
 end
 
