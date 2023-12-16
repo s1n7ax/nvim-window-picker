@@ -1,5 +1,9 @@
 name: CI
 
+permissions:
+  pull-requests: write
+  contents: write
+
 on:
   push:
     branches: [main]
@@ -16,14 +20,15 @@ jobs:
           version: latest
           # CLI arguments
           args: --check .
+
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: lunarmodules/luacheck@v1
+
   release:
     name: release
-
     if: ${{ github.ref == 'refs/heads/main' }}
     needs:
       - style
@@ -33,14 +38,5 @@ jobs:
       - uses: google-github-actions/release-please-action@v3
         id: release
         with:
-          token: ${{ secrets.RELEASE_TOKEN }}
           release-type: simple
           package-name: nvim-window-picker
-      - uses: actions/checkout@v3
-      - uses: rickstaa/action-create-tag@v1
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          tag: stable
-          message: "Current stable release: ${{ steps.release.outputs.tag_name }}"
-          tag_exists_error: false
-          force_push_tag: true
