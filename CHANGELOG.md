@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.0.3](https://github.com/s1n7ax/nvim-window-picker/compare/v2.0.1...v2.0.3) (2023-12-17)
+
+
+### Features
+
+* **rel:** add release-please version.txt ([82f9032](https://github.com/s1n7ax/nvim-window-picker/commit/82f90327d3ffddf3e28fa26d3aaf76c4d59f97e6))
+
+
+### Bug Fixes
+
+* error due to missing semicolon in big letters ([#77](https://github.com/s1n7ax/nvim-window-picker/issues/77)) ([f32f4f7](https://github.com/s1n7ax/nvim-window-picker/commit/f32f4f7b4d90fb4d6b3c513ae5329268019853d5))
+* filter_func is not called ([#78](https://github.com/s1n7ax/nvim-window-picker/issues/78)) ([794fd5e](https://github.com/s1n7ax/nvim-window-picker/commit/794fd5e695035ee91e28bfec8d14b33777ecd18a))
+* **floating-big-letter:** calculate max width ([#74](https://github.com/s1n7ax/nvim-window-picker/issues/74)) ([154b2c4](https://github.com/s1n7ax/nvim-window-picker/commit/154b2c4c2ea768f361e37ef5b4fd8144ad2634f9)), closes [#69](https://github.com/s1n7ax/nvim-window-picker/issues/69)
+* nil error when backward compatibility highlights are set ([#79](https://github.com/s1n7ax/nvim-window-picker/issues/79)) ([7c936dd](https://github.com/s1n7ax/nvim-window-picker/commit/7c936ddc46cfdad18eefaa334bec952ce47d502b))
+* No 2 is not displayed correctly in floating window ([#70](https://github.com/s1n7ax/nvim-window-picker/issues/70)) ([e7b6699](https://github.com/s1n7ax/nvim-window-picker/commit/e7b6699fbd007bbe61dc444734b9bade445b2984))
+* release 2.0.2 in manifest ([b0eed25](https://github.com/s1n7ax/nvim-window-picker/commit/b0eed25e13eb5684ff59f1a679f48247965351be))
+* release using default access token ([41c4677](https://github.com/s1n7ax/nvim-window-picker/commit/41c467731690d8d4a8b17c795cb14b63f1e53674))
+* remove unwanted diagnostic disable comments ([886f541](https://github.com/s1n7ax/nvim-window-picker/commit/886f541cdf86d8190b1b64c98aeed817a49fb492))
+* unwanted extra return ([#59](https://github.com/s1n7ax/nvim-window-picker/issues/59)) ([944c2fc](https://github.com/s1n7ax/nvim-window-picker/commit/944c2fca6656a4413de0ab6cad06c286ed1e44e9))
+
+
+### Miscellaneous Chores
+
+* release 2.0.3 ([06f2949](https://github.com/s1n7ax/nvim-window-picker/commit/06f29491a86a0f9f13bb6f3d862bd9dd844b4020))
+
 ## [2.0.2](https://github.com/s1n7ax/nvim-window-picker/compare/v2.0.1...v2.0.2) (2023-07-29)
 
 
