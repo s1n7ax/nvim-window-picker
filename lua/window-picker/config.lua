@@ -44,6 +44,9 @@ local config = {
 	-- prompt message to show to get the user input
 	prompt_message = 'Pick window: ',
 
+	-- whether to show 'No windows left to pick after filtering' prompt
+	show_no_windows_prompt = true,
+
 	-- if you want to manually filter out the windows, pass in a function that
 	-- takes two parameters. You should return window ids that should be
 	-- included in the selection
