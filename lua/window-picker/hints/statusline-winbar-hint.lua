@@ -13,6 +13,7 @@ local M = StatuslineHint:new()
 function M:set_config(config)
 	self.chars = config.chars
 	self.show_prompt = config.show_prompt
+	self.show_no_windows_prompt = config.show_no_windows_prompt
 
 	self.selection_display =
 		config.picker_config.statusline_winbar_picker.selection_display

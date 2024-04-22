@@ -16,6 +16,7 @@ function M:set_config(config)
 	self.chars = config.chars
 	self.show_prompt = config.show_prompt
 	self.prompt_message = config.prompt_message
+	self.show_no_windows_prompt = config.show_no_windows_prompt
 	self.autoselect_one = config.filter_rules.autoselect_one
 	return self
 end
@@ -47,10 +48,12 @@ function M:pick_window()
 	local windows = self:_get_windows()
 
 	if #windows == 0 then
-		vim.notify(
-			'No windows left to pick after filtering',
-			vim.log.levels.WARN
-		)
+		if self.show_no_windows_prompt then
+			vim.notify(
+				'No windows left to pick after filtering',
+				vim.log.levels.WARN
+			)
+		end
 		return
 	end
 
