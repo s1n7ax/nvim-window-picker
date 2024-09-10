@@ -145,7 +145,9 @@ end
 
 function M:restore_win_opts()
 	for index, opt in ipairs(self.opt_save.w) do
-		vim.wo[opt.window][opt.name] = opt.value
+		if vim.api.nvim_win_is_valid(opt.window) then
+			vim.wo[opt.window][opt.name] = opt.value
+		end
 		self.opt_save.w[index] = nil
 	end
 end
@@ -232,7 +234,9 @@ end
 
 function M:restore_win_hl()
 	for _, window in ipairs(self.hl_ns_save) do
-		vim.api.nvim_win_set_hl_ns(window, 0)
+		if vim.api.nvim_win_is_valid(window) then
+			vim.api.nvim_win_set_hl_ns(window, 0)
+		end
 	end
 end
 
