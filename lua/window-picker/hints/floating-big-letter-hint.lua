@@ -119,7 +119,7 @@ function M:_show_letter_in_window(window, char)
 		border = border,
 	})
 
-	vim.api.nvim_buf_set_lines(buffer_id, 0, 0, true, lines)
+	vim.api.nvim_buf_set_lines(buffer_id, 0, -1, true, lines)
 
 	return window_id
 end
