@@ -20,6 +20,7 @@ function M:new()
 		o._file_path_contains_filter,
 		o._file_path_contains_filter,
 		o._current_window_filter,
+		o._unfocusable_windows_filter,
 	}
 
 	return o
@@ -31,6 +32,7 @@ function M:set_config(config)
 	self.file_name_contains = config.file_name_contains or {}
 	self.file_path_contains = config.file_path_contains or {}
 	self.include_current_win = config.include_current_win
+	self.include_unfocusable_windows = config.include_unfocusable_windows
 end
 
 function M:filter_windows(windows)
@@ -147,6 +149,17 @@ function M:_current_window_filter(windows)
 
 	return util.tbl_filter(windows, function(winid)
 		return winid ~= curr_win
+	end)
+end
+
+function M:_unfocusable_windows_filter(windows)
+	if self.include_unfocusable_windows then
+		return windows
+	end
+
+	return util.tbl_filter(windows, function(winid)
+		local cfg = vim.api.nvim_win_get_config(winid)
+		return cfg.focusable
 	end)
 end
 

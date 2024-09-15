@@ -123,6 +123,9 @@ require 'window-picker'.setup({
         -- selection or not
         include_current_win = false,
 
+        -- whether to include windows marked as unfocusable
+        include_unfocusable_windows = false,
+
         -- filter using buffer options
         bo = {
             -- if the file type is one of following, the window will be ignored
