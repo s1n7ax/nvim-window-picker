@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/s1n7ax/nvim-window-picker/compare/v2.0.3...v2.1.0) (2025-01-09)
+
+
+### Features
+
+* add filter for unfocusable windows ([#90](https://github.com/s1n7ax/nvim-window-picker/issues/90)) ([1656a0a](https://github.com/s1n7ax/nvim-window-picker/commit/1656a0a03950f5be1a23146bbbd9f8dbf773a8a9))
+
 ## [2.0.3](https://github.com/s1n7ax/nvim-window-picker/compare/v2.0.1...v2.0.3) (2023-12-17)
 
 
