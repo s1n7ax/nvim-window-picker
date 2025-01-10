@@ -150,6 +150,7 @@ require 'window-picker'.setup({
     -- You can pass in the highlight name or a table of content to set as
     -- highlight
     highlights = {
+        enabled = true,
         statusline = {
             focused = {
                 fg = '#ededed',
