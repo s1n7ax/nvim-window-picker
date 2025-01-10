@@ -129,7 +129,7 @@ require 'window-picker'.setup({
         -- filter using buffer options
         bo = {
             -- if the file type is one of following, the window will be ignored
-            filetype = { 'NvimTree', 'neo-tree', 'notify' },
+            filetype = { 'NvimTree', 'neo-tree', 'notify', 'snacks_notif' },
 
             -- if the file type is one of following, the window will be ignored
             buftype = { 'terminal' },
