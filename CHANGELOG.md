@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/s1n7ax/nvim-window-picker/compare/v2.1.1...v2.2.0) (2025-01-11)
+
+
+### Features
+
+* add filter for snacks notifications ([#97](https://github.com/s1n7ax/nvim-window-picker/issues/97)) ([3639533](https://github.com/s1n7ax/nvim-window-picker/commit/3639533293f20b61c31c2d5a1167fd56dc5955ab))
+
 ## [2.1.1](https://github.com/s1n7ax/nvim-window-picker/compare/v2.1.0...v2.1.1) (2025-01-10)
 
 
