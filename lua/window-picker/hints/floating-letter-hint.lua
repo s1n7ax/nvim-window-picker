@@ -36,7 +36,7 @@ function M:set_config(config)
 	self.chars = config.chars
 end
 
-function M:_get_float_win_pos(window, width, height)
+function M._get_float_win_pos(window, width, height)
 	local win_width = vim.api.nvim_win_get_width(window)
 	local win_height = vim.api.nvim_win_get_height(window)
 
@@ -51,7 +51,7 @@ end
 function M:_show_letter_in_window(window, char)
 	local width = #char
 	local height = 1
-	local point = self:_get_float_win_pos(window, width, height)
+	local point = self._get_float_win_pos(window, width, height)
 
 	local buffer_id = vim.api.nvim_create_buf(false, true)
 	local window_id = vim.api.nvim_open_win(buffer_id, false, {
