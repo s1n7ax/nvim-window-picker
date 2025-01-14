@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/s1n7ax/nvim-window-picker/compare/v2.2.0...v2.3.0) (2025-01-14)
+
+
+### Features
+
+* add floating letter hint ([#99](https://github.com/s1n7ax/nvim-window-picker/issues/99)) ([bfe4976](https://github.com/s1n7ax/nvim-window-picker/commit/bfe49763dd297d02e5a9fda7ca252890324ef78e))
+
 ## [2.2.0](https://github.com/s1n7ax/nvim-window-picker/compare/v2.1.1...v2.2.0) (2025-01-11)
 
 
