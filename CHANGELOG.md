@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/s1n7ax/nvim-window-picker/compare/v2.3.0...v2.3.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* resolve issue 101 ([#102](https://github.com/s1n7ax/nvim-window-picker/issues/102)) ([1deef6d](https://github.com/s1n7ax/nvim-window-picker/commit/1deef6d5caa6ac70bb5d819e51ecb5ec924ea1b2))
+
 ## [2.3.0](https://github.com/s1n7ax/nvim-window-picker/compare/v2.2.0...v2.3.0) (2025-01-14)
 
 
