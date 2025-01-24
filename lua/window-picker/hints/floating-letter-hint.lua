@@ -32,7 +32,6 @@ function M:new()
 end
 
 function M:set_config(config)
-	print(vim.inspect(config))
 	self.chars = config.chars
 end
 
