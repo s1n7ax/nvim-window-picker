@@ -70,6 +70,8 @@ require 'window-picker'.setup({
 
     -- This section contains picker specific configurations
     picker_config = {
+        -- whether should select window by clicking left mouse button on it
+        handle_mouse_click = false,
         statusline_winbar_picker = {
             -- You can change the display string in status bar.
             -- It supports '%' printf style. Such as `return char .. ': %f'` to display

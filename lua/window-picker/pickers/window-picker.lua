@@ -17,6 +17,7 @@ function M:set_config(config)
 	self.show_prompt = config.show_prompt
 	self.prompt_message = config.prompt_message
 	self.autoselect_one = config.filter_rules.autoselect_one
+	self.handle_mouse_click = config.picker_config.handle_mouse_click
 	return self
 end
 
@@ -68,11 +69,15 @@ function M:pick_window()
 		print(self.prompt_message)
 	end
 
-	local char = util.get_user_input_char()
+	local char = util.get_user_input_char(self.handle_mouse_click)
 
 	vim.cmd.redraw()
 
 	self.hint:clear()
+
+	if char == '<LeftMouse>' then
+		return vim.fn.getmousepos().winid
+	end
 
 	if char then
 		window = self:_find_matching_win_for_char(char, windows)

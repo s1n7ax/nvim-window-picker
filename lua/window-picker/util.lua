@@ -26,7 +26,7 @@ function M.map_find(tbl, match_func)
 	end
 end
 
-function M.get_user_input_char()
+function M.get_user_input_char(handle_mouse_click)
 	local ok, c = pcall(vim.fn.getchar)
 
 	if not ok then
@@ -34,6 +34,11 @@ function M.get_user_input_char()
 	end
 
 	while type(c) ~= 'number' do
+		local ok2, translated_key = pcall(vim.fn.keytrans, c)
+		if ok2 and handle_mouse_click and translated_key == '<LeftMouse>' then
+			return translated_key
+		end
+
 		c = vim.fn.getchar()
 	end
 
