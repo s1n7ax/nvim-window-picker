@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/s1n7ax/nvim-window-picker/compare/v2.3.1...v2.4.0) (2025-02-26)
+
+
+### Features
+
+* select window by left mouse click ([#106](https://github.com/s1n7ax/nvim-window-picker/issues/106)) ([c266650](https://github.com/s1n7ax/nvim-window-picker/commit/c2666501ac40ebe0c6afa06c066313b941057ee7))
+
 ## [2.3.1](https://github.com/s1n7ax/nvim-window-picker/compare/v2.3.0...v2.3.1) (2025-01-24)
 
 
