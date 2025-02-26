@@ -75,7 +75,7 @@ function M:pick_window()
 
 	self.hint:clear()
 
-	if char == "<LeftMouse>" then
+	if char == '<LeftMouse>' then
 		return vim.fn.getmousepos().winid
 	end
 
